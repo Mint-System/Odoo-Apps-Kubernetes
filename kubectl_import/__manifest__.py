@@ -9,7 +9,7 @@
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "depends": ["kubectl"],
-    "data": ["views/kubectl_context_views.xml", "views/kubectl_namespace_views.xml", "data/data.xml"],
+    "data": ["views/kubectl_context_views.xml", "views/kubectl_namespace_views.xml"],
     "installable": True,
     "application": False,
     "auto_install": False,

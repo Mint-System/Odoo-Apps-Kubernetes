@@ -38,3 +38,4 @@ class KubectlNamespace(models.Model):
                 namespace_id.write({"uid": uid})
             else:
                 self.create({"name": name, "uid": uid, "cluster_id": cluster_id.id})
+        return len(data["items"])
