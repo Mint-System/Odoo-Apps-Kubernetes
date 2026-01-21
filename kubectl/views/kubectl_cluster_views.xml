@@ -41,6 +41,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
+                <field name="alias" />
                 <field name="server" />
                 <field name="provider_id" />
             </list>
