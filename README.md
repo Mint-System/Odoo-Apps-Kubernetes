@@ -18,9 +18,6 @@ git clone git@github.com:Mint-System/Odoo-Apps-Vertical-Saas.git ./addons/vertic
 | [helm](helm) |         Apply Helm charts. |
 | [kubectl_import](kubectl_import) |         Import data from Kubernetes cluster. |
 | [kubectl](kubectl) |         Manage kubectl configuration. |
-| [license](license) |         Manage software licensens. |
-| [license_sale](license_sale) |         Sell software licenses. |
-| [license_subscription](license_subscription) |         Update license based on subscription changes. |
-| [license_website_sale](license_website_sale) |         Purchase licenses in the Odoo shop. |
 | [sale_helm](sale_helm) |         Sell services and assign hosting provider and consulting partner. |
+| [website_kubectl](website_kubectl) |         Present Kuberentes clusters on website. |
 | [website_sale_helm](website_sale_helm) |         Apply Helm Charts when a product is bought. |

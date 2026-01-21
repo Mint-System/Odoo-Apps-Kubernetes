@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="cluster_page" name="Cluster Page">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <t
+                    t-set="editor_message"
+                >DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS</t>
+                <div
+                    class="oe_structure oe_empty"
+                    id="oe_structure_website_kubectl_cluster_1"
+                    t-att-data-editor-message="editor_message"
+                />
+                <div class="container">
+                    <div class="row">
+                        <t t-call="website_kubectl.cluster_detail" />
+                    </div>
+                </div>
+                <div
+                    class="oe_structure oe_empty"
+                    id="oe_structure_website_kubectl_cluster_2"
+                    t-att-data-editor-message="editor_message"
+                />
+            </div>
+        </t>
+    </template>
+
+    <template id="cluster_detail" name="Cluster Details">
+        <div class="row">
+            <div class="d-flex align-items-center flex-wrap mt-4 mb-4">
+                <div class="flex-grow-1">
+                    <h1 id="cluster_name" t-field="cluster.name" />
+                </div>
+            </div>
+            <t t-if="cluster">
+                <div t-field="cluster.website_description" class="mb-5" />
+            </t>
+            <t t-out="right_column or ''" />
+        </div>
+    </template>
+</odoo>

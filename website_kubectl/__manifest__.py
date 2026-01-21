@@ -1,15 +1,15 @@
 {
-    "name": "Website Sale Helm",
+    "name": "Website Kubectl",
     "summary": """
-        Apply Helm Charts when a product is bought.
+        Present Kuberentes clusters on website.
     """,
     "author": "Mint System GmbH",
     "website": "https://www.mint-system.ch/",
     "category": "Repository",
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
-    "depends": ["website_sale", "website_partner", "sale_helm"],
-    "data": ["views/website_templates.xml", "data/data.xml"],
+    "depends": ["website", "kubectl"],
+    "data": ["views/kubectl_cluster_views.xml", "views/website_kubectl_cluster_templates.xml"],
     "installable": True,
     "application": False,
     "auto_install": False,

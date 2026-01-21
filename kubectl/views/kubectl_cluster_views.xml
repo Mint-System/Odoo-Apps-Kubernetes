@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box" />
                     <div class="oe_title">
                         <h1>
                             <field name="name" />
@@ -39,7 +40,7 @@
         <field name="model">kubectl.cluster</field>
         <field name="arch" type="xml">
             <list>
-                <field name="display_name" />
+                <field name="name" />
                 <field name="server" />
                 <field name="provider_id" />
             </list>
