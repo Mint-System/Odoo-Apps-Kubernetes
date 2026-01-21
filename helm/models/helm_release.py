@@ -24,9 +24,8 @@ class HelmRelease(models.Model):
     output = fields.Text()
     ingress_url = fields.Char(compute="_compute_ingress_url")
 
-    chart_id = fields.Many2one("helm.chart", help="Chart that shall be installed.", required=True)
-    context_id = fields.Many2one("kubectl.context", help="Context used for installation.", required=True)
-    cluster_id = fields.Many2one(related="context_id.cluster_id")
+    chart_id = fields.Many2one("helm.chart", help="Chart to installed.", required=True)
+    cluster_id = fields.Many2one("kubectl.cluster", help="Target cluster to deploy to.", required=True)
     create_namespace = fields.Boolean()
     namespace = fields.Char(help="Namespace with this input will be created.")
     namespace_id = fields.Many2one(
@@ -59,7 +58,7 @@ class HelmRelease(models.Model):
     def _eval_value(self, expression):
         return safe_eval(expression, {"self": self, "release": self})
 
-    @api.depends("chart_id", "chart_id.value_ids", "state")
+    @api.depends("chart_id", "chart_id.value_ids", "state", "partner_id")
     def _compute_values(self):
         """
         Evaluate custom values of the chart.
@@ -101,7 +100,7 @@ class HelmRelease(models.Model):
 
     def action_install(self):
         """
-        Install the Helm chart using the current context configuration.
+        Install the Helm chart using the default context configuration.
         """
         self.ensure_one()
 
@@ -118,7 +117,7 @@ class HelmRelease(models.Model):
                 command += ["--create-namespace", "--namespace", self.namespace]
 
             # Run command
-            result = self.context_id.run(command, self.values)
+            result = self.cluster_id.context_ids[0].run(command, self.values)
 
             # Create namespace object
             if self.create_namespace and not self.namespace_id:
@@ -135,7 +134,7 @@ class HelmRelease(models.Model):
 
     def action_upgrade(self):
         """
-        Upgrade the Helm chart using the current context configuration.
+        Upgrade the Helm chart using the default context configuration.
         """
         self.ensure_one()
         try:
@@ -145,7 +144,7 @@ class HelmRelease(models.Model):
                 self.name,
                 f"{self.chart_id.repo_id.name}/{self.chart_id.name}",
             ]
-            result = self.context_id.run(command, self.values)
+            result = self.cluster_id.context_ids[0].run(command, self.values)
             self.output = result.stdout
             return display_notification(_("Chart Upgraded"), result.stdout, "success")
         except subprocess.CalledProcessError as e:
@@ -154,11 +153,11 @@ class HelmRelease(models.Model):
 
     def action_uninstall(self):
         """
-        Uninstall the Helm chart using the current context configuration.
+        Uninstall the Helm chart using the default context configuration.
         """
         self.ensure_one()
         try:
-            result = self.context_id.run(
+            result = self.cluster_id.context_ids[0].run(
                 [
                     "helm",
                     "uninstall",

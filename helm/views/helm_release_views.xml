@@ -42,7 +42,7 @@
                             <group>
                                 <group>
                                     <field name="chart_id" />
-                                    <field name="context_id" />
+                                    <field name="cluster_id" />
                                     <field
                                         name="create_namespace"
                                         invisible="namespace_id"
@@ -175,7 +175,7 @@
             <list>
                 <field name="name" />
                 <field name="chart_id" />
-                <field name="context_id" />
+                <field name="cluster_id" />
                 <field name="partner_id" />
                 <field name="state" />
             </list>

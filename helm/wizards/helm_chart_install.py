@@ -7,7 +7,7 @@ class HelmChartInstall(models.TransientModel):
 
     name = fields.Char(string="Release Name", required=True)
     chart_id = fields.Many2one("helm.chart", required=True)
-    context_id = fields.Many2one("kubectl.context", required=True)
+    cluster_id = fields.Many2one("kubectl.cluster", required=True)
     create_namespace = fields.Boolean()
     namespace = fields.Char(help="Namespace with this input will be created.")
     namespace_id = fields.Many2one("kubectl.namespace", string="Linked Namespace", help="Target namespace in cluster.")
@@ -21,7 +21,7 @@ class HelmChartInstall(models.TransientModel):
             release_id = self.chart_id.create_release(
                 {
                     "name": wizard.name,
-                    "context_id": wizard.context_id.id,
+                    "cluster_id": wizard.cluster_id.id,
                     "create_namespace": wizard.create_namespace,
                     "namespace": wizard.namespace,
                     "namespace_id": wizard.namespace_id.id,
