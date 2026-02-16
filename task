@@ -70,7 +70,7 @@ version() {
     python3 -V
     docker -v
     kubectl version
-    kind --version
+    helm version
 }
 
 install() {
