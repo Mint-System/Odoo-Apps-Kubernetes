@@ -1,11 +1,14 @@
 on:
+  pull_request:
+    branches:
+      - "18.0*"
   push:
     branches:
       - "18.0"
 
 jobs:
-  build:
-    name: Build and Publish
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
@@ -16,9 +19,5 @@ jobs:
         run: ./task install
       - name: Version
         run: ./task version
-      - name: Build
-        run: ./task build
-      - name: Publish
-        run: ./task publish
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      - name: Test
+        run: ./task test

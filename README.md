@@ -1,23 +1,17 @@
-# Odoo Apps: Vertical Saas
+# Odoo Apps: Kubernetes
 
-Odoo modules extending the `vertical` module.
+Odoo modules extending the `kubernetes` module.
 
 ## Usage
 
 Clone this repo into the Odoo addons directory.
 
 ```bash
-git clone git@github.com:Mint-System/Odoo-Apps-Vertical-Saas.git ./addons/vertical_saas
+git clone git@github.com:Mint-System/Odoo-Apps-Kubernetes.git ./addons/kubernetes
 ```
 
 ## Available modules
 
 | Module | Summary |
-| --- | --- |
-| [helm_import](helm_import) |         Import data from Helm repo. |
-| [helm](helm) |         Apply Helm charts. |
-| [kubectl_import](kubectl_import) |         Import data from Kubernetes cluster. |
-| [kubectl](kubectl) |         Manage kubectl configuration. |
-| [sale_helm](sale_helm) |         Sell services and assign hosting provider and consulting partner. |
-| [website_kubectl](website_kubectl) |         Present Kuberentes clusters on website. |
-| [website_sale_helm](website_sale_helm) |         Apply Helm Charts when a product is bought. |
+| ------ | ------- |
+|        |         |

@@ -94,6 +94,11 @@
         <field name="value">mintsystem/odoo:18.0.20251222</field>
     </record>
 
+    <record id="chart_odoo_value_image_option3" model="helm.chart.value.option">
+        <field name="value_id" ref="chart_odoo_value_image" />
+        <field name="value">mintsystem/odoo:18.0.20260209</field>
+    </record>
+
     <record id="chart_odoo_value_image" model="helm.chart.value">
         <field name="option_id" ref="chart_odoo_value_image_option1" />
     </record>
