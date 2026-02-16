@@ -69,7 +69,6 @@ version() {
     uv --version
     python3 -V
     docker -v
-    kubectl version
     helm version
 }
 
