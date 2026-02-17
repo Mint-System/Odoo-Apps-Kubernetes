@@ -53,7 +53,7 @@ class HelmRelease(models.Model):
     def _inverse_namespace_id(self):
         for rec in self:
             if not rec.namespace and rec.namespace_id:
-                rec.namespace = namespace_id.name
+                rec.namespace = rec.namespace_id.name
 
     def _eval_value(self, expression):
         return safe_eval(expression, {"self": self, "release": self})
@@ -109,6 +109,15 @@ class HelmRelease(models.Model):
             raise ValidationError(_(f"The chart '{self.chart_id.name}' has not been added."))
 
         try:
+            # Create namespace object if needed
+            if self.create_namespace and not self.namespace_id:
+                self.namespace_id = self.env["kubectl.namespace"].create(
+                    {"name": self.namespace, "cluster_id": self.cluster_id.id}
+                )
+
+            # Create secrets before chart installation
+            self._create_secrets()
+
             # Setup install command
             command = ["helm", "install", self.name, f"{self.chart_id.repo_id.name}/{self.chart_id.name}"]
 
@@ -119,18 +128,89 @@ class HelmRelease(models.Model):
             # Run command
             result = self.cluster_id.context_ids[0].run(command, self.values)
 
-            # Create namespace object
-            if self.create_namespace and not self.namespace_id:
-                self.namespace_id = self.env["kubectl.namespace"].create(
-                    {"name": self.namespace, "cluster_id": self.cluster_id.id}
-                )
-
             self.write({"state": "installed"})
             self.output = result.stdout
             return display_notification(_("Chart Installed"), result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
             return display_notification(_("Installing Chart Failed"), e.stderr, "danger")
+
+    def _create_secrets(self):
+        """
+        Create Kubernetes secrets for this release.
+        """
+        self.ensure_one()
+
+        if not self.secret_ids or not self.namespace:
+            return
+
+        context = self.cluster_id.context_ids[0]
+
+        for secret in self.secret_ids:
+            # Use the secret name exactly as defined in Odoo (e.g., "odoo-creds")
+            secret_name = secret.name
+
+            # Prepare data for secret
+            secret_data = ""
+            for data in secret.data_ids:
+                try:
+                    evaluated_value = self._eval_value(data.value)
+                    secret_data += f"{data.key}={evaluated_value}\n"
+                except Exception as e:
+                    _logger.error(f"Error evaluating secret value {data.value}: {str(e)}")
+                    continue
+
+            if not secret_data:
+                continue
+
+            # Create secret using kubectl
+            try:
+                # Create secret from literal values
+                command = [
+                    "kubectl",
+                    "create",
+                    "secret",
+                    "generic",
+                    secret_name,
+                    "--namespace",
+                    self.namespace,
+                    "--from-literal=" + secret_data.strip().replace("\n", " --from-literal="),
+                ]
+                result = context.run(command)
+                _logger.info(f"Created secret {secret_name} in namespace {self.namespace}")
+            except subprocess.CalledProcessError as e:
+                _logger.error(f"Failed to create secret {secret_name}: {e.stderr}")
+
+    def _delete_secrets(self):
+        """
+        Delete Kubernetes secrets for this release.
+        """
+        self.ensure_one()
+
+        if not self.secret_ids or not self.namespace:
+            return
+
+        context = self.cluster_id.context_ids[0]
+
+        for secret in self.secret_ids:
+            # Use the secret name exactly as defined in Odoo (e.g., "odoo-creds")
+            secret_name = secret.name
+
+            try:
+                # Delete secret using kubectl
+                command = [
+                    "kubectl",
+                    "delete",
+                    "secret",
+                    secret_name,
+                    "--namespace",
+                    self.namespace,
+                    "--ignore-not-found=true",  # Don't fail if secret doesn't exist
+                ]
+                result = context.run(command)
+                _logger.info(f"Deleted secret {secret_name} from namespace {self.namespace}")
+            except subprocess.CalledProcessError as e:
+                _logger.error(f"Failed to delete secret {secret_name}: {e.stderr}")
 
     def action_upgrade(self):
         """
@@ -145,6 +225,11 @@ class HelmRelease(models.Model):
                 f"{self.chart_id.repo_id.name}/{self.chart_id.name}",
             ]
             result = self.cluster_id.context_ids[0].run(command, self.values)
+
+            # Recreate secrets after upgrade
+            self._delete_secrets()
+            self._create_secrets()
+
             self.output = result.stdout
             return display_notification(_("Chart Upgraded"), result.stdout, "success")
         except subprocess.CalledProcessError as e:
@@ -157,6 +242,9 @@ class HelmRelease(models.Model):
         """
         self.ensure_one()
         try:
+            # Delete secrets before uninstalling chart
+            self._delete_secrets()
+
             result = self.cluster_id.context_ids[0].run(
                 [
                     "helm",
