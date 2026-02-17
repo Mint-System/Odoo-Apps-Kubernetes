@@ -13,6 +13,12 @@
                         type="object"
                         invisible="state != 'added'"
                     />
+                    <button
+                        string="Releases"
+                        name="%(helm.action_helm_release_view)d"
+                        type="action"
+                        context="{'search_default_chart_id': id, 'default_chart_id': id}"
+                    />
                 </header>
                 <sheet>
                     <div class="oe_title">

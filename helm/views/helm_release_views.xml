@@ -190,10 +190,17 @@
             <search>
                 <field name="name" />
                 <field name="partner_id" />
+                <field name="chart_id" />
                 <filter
                     name="installed"
                     string="Installed"
                     domain="[('state','=', 'installed')]"
+                />
+                <filter
+                    name="chart_id"
+                    string="By Chart"
+                    domain="[('chart_id','=', chart_id)]"
+                    context="{'group_by': 'chart_id'}"
                 />
             </search>
         </field>
