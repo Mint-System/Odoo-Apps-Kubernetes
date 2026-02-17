@@ -16,6 +16,7 @@
         <field name="server">https://127.0.0.1:35249</field>
         <field name="domain">knd.local</field>
         <field name="provider_id" ref="kubectl.res_partner_localhost_demo" />
+        <field name="context_id" ref="kubectl.kubectl_context_kind_demo" />
     </record>
 
     <record id="kubectl_cluster_axo_demo" model="kubectl.cluster">
@@ -24,6 +25,7 @@
         <field name="alias">axo</field>
         <field name="domain">axo.mintcloud.ch</field>
         <field name="provider_id" ref="kubectl.res_partner_vshn_demo" />
+        <field name="context_id" ref="kubectl.kubectl_context_axo_demo" />
     </record>
 
     <record id="kubectl_namespace_default_demo" model="kubectl.namespace">

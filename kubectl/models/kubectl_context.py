@@ -123,3 +123,17 @@ class KubectlContext(models.Model):
                     "message": e.stderr,
                 },
             }
+
+    def action_show_namespaces(self):
+        """
+        Open the list view of namespaces for this context's cluster.
+        """
+        self.ensure_one()
+        return {
+            "name": "Namespaces",
+            "type": "ir.actions.act_window",
+            "res_model": "kubectl.namespace",
+            "view_mode": "list,form",
+            "domain": [("cluster_id", "=", self.cluster_id.id)],
+            "target": "current",
+        }

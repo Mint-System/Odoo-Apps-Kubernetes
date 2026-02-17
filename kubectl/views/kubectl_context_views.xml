@@ -18,6 +18,15 @@
                             <field name="name" />
                         </h1>
                     </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_show_namespaces"
+                            string="Namespaces"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-list"
+                        />
+                    </div>
                     <notebook>
                         <page string="Command" name="command">
                             <group>

@@ -19,7 +19,22 @@ class KubectlCluster(models.Model):
 
     provider_id = fields.Many2one("res.partner", domain="[('is_provider','=', True)]", required=True)
     context_ids = fields.One2many("kubectl.context", "cluster_id")
+    context_id = fields.Many2one("kubectl.context", string="Default Context")
 
     def _compute_display_name(self):
         for rec in self:
             rec.display_name = f"{rec.name} ({rec.alias})"
+
+    def action_show_contexts(self):
+        """
+        Open the list view of contexts for this cluster.
+        """
+        self.ensure_one()
+        return {
+            "name": "Contexts",
+            "type": "ir.actions.act_window",
+            "res_model": "kubectl.context",
+            "view_mode": "list,form",
+            "domain": [("id", "in", self.context_ids.ids)],
+            "target": "current",
+        }

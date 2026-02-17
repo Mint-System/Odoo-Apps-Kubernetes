@@ -159,7 +159,7 @@ class HelmRelease(models.Model):
                 command += ["--create-namespace", "--namespace", self.namespace]
 
             # Run command
-            result = self.cluster_id.context_ids[0].run(command, self.values)
+            result = self.cluster_id.context_id.run(command, self.values)
 
             self.write({"state": "installed"})
             self.output = result.stdout
