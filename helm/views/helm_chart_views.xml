@@ -60,6 +60,7 @@
                                     >
                                         <list>
                                             <field name="path" />
+                                            <field name="value" />
                                             <field
                                                 name="option_id"
                                                 context="{'default_value_id': id}"

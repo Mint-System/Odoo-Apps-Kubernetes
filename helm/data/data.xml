@@ -73,9 +73,7 @@
 
     <record id="chart_odoo_value_init_password" model="helm.chart.value">
         <field name="path">init.password</field>
-        <field
-            name="value"
-        >import random,string;print(''.join(random.choice(string.ascii_letters+string.digits)for _ in range(8)))</field>
+        <field name="value">generate_password()</field>
         <field name="release_chart_id" eval="chart_odoo" />
     </record>
 

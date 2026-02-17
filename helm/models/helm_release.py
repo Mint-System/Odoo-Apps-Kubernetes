@@ -56,7 +56,17 @@ class HelmRelease(models.Model):
                 rec.namespace = rec.namespace_id.name
 
     def _eval_value(self, expression):
-        return safe_eval(expression, {"self": self, "release": self})
+        def generate_password(length=8):
+            """
+            Generate a random password with letters and digits.
+            """
+            import random
+            import string
+
+            return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
+
+        context = {"self": self, "release": self, "generate_password": generate_password}
+        return safe_eval(expression, context)
 
     @api.depends("chart_id", "chart_id.value_ids", "state", "partner_id")
     def _compute_values(self):
@@ -66,6 +76,8 @@ class HelmRelease(models.Model):
         for release in self:
             if release.chart_id.state == "added":
                 dict_values = {}
+
+                # Process chart values
                 for value in release.chart_id.value_ids.filtered(
                     lambda v: not v.filter_cluster_ids or release.cluster_id in v.filter_cluster_ids
                 ):
@@ -73,7 +85,7 @@ class HelmRelease(models.Model):
                         new_value = release._eval_value(value.value)
 
                         # Apply value to path and convert to dict
-                        # Turns 'ingress.host: value' into '{"ingress": {"host": value}}"''
+                        # Turns 'ingress.host: value' into '{"ingress": {"host": value}}'"
                         if value.path:
                             keys = value.path.split(".")
                             current = dict_values
@@ -86,6 +98,27 @@ class HelmRelease(models.Model):
                             current[keys[-1]] = new_value  # This should be inside the if value.path block
                     except Exception as e:
                         _logger.error(f"Invalid expression {value.value}: {str(e)}")
+
+                for value in self.value_ids:
+                    # Use the option value if option_id is set, otherwise use the main value
+                    if value.option_id:
+                        new_value = value.option_id.value
+                    else:
+                        # Use the value directly since it's already evaluated
+                        new_value = value.value
+
+                    # Apply value to path and convert to dict
+                    if value.path:
+                        keys = value.path.split(".")
+                        current = dict_values
+                        for key in keys[:-1]:
+                            if key not in current:
+                                current[key] = {}
+                            elif not isinstance(current[key], dict):
+                                current[key] = {"_value": current[key]}
+                            current = current[key]
+                        current[keys[-1]] = new_value
+
                 try:
                     release.values = yaml.safe_dump(dict_values, sort_keys=False)
                 except yaml.YAMLError as e:
@@ -147,10 +180,6 @@ class HelmRelease(models.Model):
         context = self.cluster_id.context_ids[0]
 
         for secret in self.secret_ids:
-            # Use the secret name exactly as defined in Odoo (e.g., "odoo-creds")
-            secret_name = secret.name
-
-            # Prepare data for secret
             secret_data = ""
             for data in secret.data_ids:
                 try:
@@ -171,15 +200,15 @@ class HelmRelease(models.Model):
                     "create",
                     "secret",
                     "generic",
-                    secret_name,
+                    secret.name,
                     "--namespace",
                     self.namespace,
                     "--from-literal=" + secret_data.strip().replace("\n", " --from-literal="),
                 ]
                 result = context.run(command)
-                _logger.info(f"Created secret {secret_name} in namespace {self.namespace}")
+                _logger.info(f"Created secret {secret.name} in namespace {self.namespace}")
             except subprocess.CalledProcessError as e:
-                _logger.error(f"Failed to create secret {secret_name}: {e.stderr}")
+                _logger.error(f"Failed to create secret {secret.name}: {e.stderr}")
 
     def _delete_secrets(self):
         """
@@ -193,24 +222,21 @@ class HelmRelease(models.Model):
         context = self.cluster_id.context_ids[0]
 
         for secret in self.secret_ids:
-            # Use the secret name exactly as defined in Odoo (e.g., "odoo-creds")
-            secret_name = secret.name
-
             try:
                 # Delete secret using kubectl
                 command = [
                     "kubectl",
                     "delete",
                     "secret",
-                    secret_name,
+                    secret.name,
                     "--namespace",
                     self.namespace,
                     "--ignore-not-found=true",  # Don't fail if secret doesn't exist
                 ]
                 result = context.run(command)
-                _logger.info(f"Deleted secret {secret_name} from namespace {self.namespace}")
+                _logger.info(f"Deleted secret {secret.name} from namespace {self.namespace}")
             except subprocess.CalledProcessError as e:
-                _logger.error(f"Failed to delete secret {secret_name}: {e.stderr}")
+                _logger.error(f"Failed to delete secret {secret.name}: {e.stderr}")
 
     def action_upgrade(self):
         """
@@ -225,10 +251,6 @@ class HelmRelease(models.Model):
                 f"{self.chart_id.repo_id.name}/{self.chart_id.name}",
             ]
             result = self.cluster_id.context_ids[0].run(command, self.values)
-
-            # Recreate secrets after upgrade
-            self._delete_secrets()
-            self._create_secrets()
 
             self.output = result.stdout
             return display_notification(_("Chart Upgraded"), result.stdout, "success")

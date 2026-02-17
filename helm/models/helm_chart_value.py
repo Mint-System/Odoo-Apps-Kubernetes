@@ -24,6 +24,28 @@ class HelmChartValue(models.Model):
         for rec in self:
             rec.display_name = rec.path
 
+    def copy(self, default=None):
+        """
+        Copy a chart value, evaluating expressions when copying to a release.
+        """
+        if default is None:
+            default = {}
+
+        # If this value is being copied to a release, evaluate the expression
+        if "release_id" in default and self.value:
+            # Get the release to use its context for evaluation
+            release = self.env["helm.release"].browse(default["release_id"])
+            try:
+                # Evaluate the expression and store the result
+                evaluated_value = release._eval_value(self.value)
+                default["value"] = str(evaluated_value)
+            except Exception as e:
+                _logger.error(f"Error evaluating value {self.value}: {str(e)}")
+                # Keep original value if evaluation fails
+                default["value"] = self.value
+
+        return super().copy(default=default)
+
 
 class HelmChartValueOption(models.Model):
     _name = "helm.chart.value.option"

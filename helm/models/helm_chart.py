@@ -78,6 +78,18 @@ class HelmChart(models.Model):
         release_value_ids.write({"chart_id": False, "release_id": release_id.id})
         secret_ids.write({"chart_id": False, "release_id": release_id.id})
 
+        # Evaluate expressions in copied values
+        for value in release_value_ids:
+            if value.value and value.value.strip():
+                try:
+                    # Evaluate the expression and store the result
+                    evaluated_value = release_id._eval_value(value.value)
+                    value.value = str(evaluated_value)
+                except Exception as e:
+                    _logger.error(f"Error evaluating value {value.value}: {str(e)}")
+                    # Keep original value if evaluation fails
+                    pass
+
         return release_id
 
     def action_release(self):
