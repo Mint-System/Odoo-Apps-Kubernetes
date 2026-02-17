@@ -7,6 +7,8 @@
             <list>
                 <field name="path" />
                 <field name="value" />
+                <field name="chart_id" />
+                <field name="release_id" />
             </list>
         </field>
     </record>
@@ -22,10 +24,7 @@
                             <field name="filter_cluster_ids" widget="many2many_tags" />
                             <field name="path" />
                             <field name="value" />
-                            <field
-                                name="option_id"
-                                context="{'default_value_id': id}"
-                            />
+                            <field name="option_id" context="{'default_path': path}" />
                         </group>
                         <group>
                             <field name="chart_id" readonly="True" />
@@ -46,14 +45,26 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="path" />
                             <field name="value" />
-                        </group>
-                        <group>
-                            <field name="value_id" readonly="True" />
                         </group>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
+
+    <record id="action_helm_chart_value_view" model="ir.actions.act_window">
+        <field name="name">Values</field>
+        <field name="res_model">helm.chart.value</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="helm.menu_helm_values"
+        name="Values"
+        parent="helm.menu_root"
+        action="helm.action_helm_chart_value_view"
+        sequence="15"
+    />
 </odoo>
