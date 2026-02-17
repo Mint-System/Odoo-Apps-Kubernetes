@@ -9,7 +9,7 @@ class TestHelmRelease(TransactionCase):
         Test that helm values are evaluated correctly using existing Odoo chart from data.xml.
         """
         odoo_chart = self.env.ref("helm.chart_odoo")
-        cluster = self.env.ref("helm.ingress_nginx")
+        cluster = self.env.ref("kubectl.kubectl_cluster_kind_demo")
 
         # Create a release using the Odoo chart
         release = self.env["helm.release"].create(
