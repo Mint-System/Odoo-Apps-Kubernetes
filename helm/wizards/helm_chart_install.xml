@@ -16,6 +16,7 @@
                             required="True"
                         />
                         <field name="namespace_id" invisible="create_namespace" />
+                        <field name="product_id" />
                         <field name="partner_id" />
                     </group>
                 </sheet>

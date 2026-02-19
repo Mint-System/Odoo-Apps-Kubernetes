@@ -35,7 +35,8 @@ class HelmRelease(models.Model):
         string="Linked Namespace",
         help="Target namespace in cluster.",
     )
-    partner_id = fields.Many2one("res.partner", string="Customer")
+    product_id = fields.Many2one("product.product", required=True)
+    partner_id = fields.Many2one("res.partner", string="Customer", required=True)
 
     value_ids = fields.One2many(
         "helm.chart.value",
@@ -77,7 +78,7 @@ class HelmRelease(models.Model):
         context = {"self": self, "release": self, "release_id": self, "generate_password": self.generate_password}
         return safe_eval(expression, context)
 
-    @api.depends("chart_id", "chart_id.value_ids", "state", "partner_id")
+    @api.depends("chart_id", "chart_id.value_ids", "state", "product_id", "partner_id")
     def _compute_values(self):
         """
         Evaluate custom values of the chart.
@@ -88,14 +89,15 @@ class HelmRelease(models.Model):
 
                 # Process chart values
                 for value in release.chart_id.value_ids.filtered(
-                    lambda v: not v.filter_cluster_ids or release.cluster_id in v.filter_cluster_ids
+                    lambda v: (not v.filter_cluster_ids or release.cluster_id in v.filter_cluster_ids)
+                    and (not v.filter_product_ids or release.product_id in v.filter_product_ids)
                 ):
                     try:
                         new_value = release._eval_value(value.value)
 
                         # Apply value to path and convert to dict
                         # Turns 'ingress.host: value' into '{"ingress": {"host": value}}'"
-                        if value.path:
+                        if value.path and new_value:
                             keys = value.path.split(".")
                             current = dict_values
                             for key in keys[:-1]:
@@ -108,16 +110,15 @@ class HelmRelease(models.Model):
                     except Exception as e:
                         _logger.error(f"Invalid expression {value.value}: {str(e)}")
 
-                for value in self.value_ids:
+                for value in release.value_ids:
                     # Use the option value if option_id is set, otherwise use the main value
                     if value.option_id:
                         new_value = value.option_id.value
                     else:
-                        # Use the value directly since it's already evaluated
                         new_value = value.value
 
                     # Apply value to path and convert to dict
-                    if value.path:
+                    if value.path and new_value:
                         keys = value.path.split(".")
                         current = dict_values
                         for key in keys[:-1]:

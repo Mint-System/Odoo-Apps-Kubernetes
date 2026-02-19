@@ -16,17 +16,15 @@ class HelmRelease(models.Model):
         Add order_id to context.
         """
         order_id = self.sale_line_id.order_id if self.sale_line_id else False
-        if order_id:
-            return safe_eval(
-                expression,
-                {
-                    "self": self,
-                    "release": self,
-                    "release_id": self,
-                    "generate_password": self.generate_password,
-                    "order": order_id,
-                    "order_id": order_id,
-                },
-            )
-        else:
-            return super()._eval_value(expression)
+        context = {
+            "self": self,
+            "release": self,
+            "release_id": self,
+            "generate_password": self.generate_password,
+            "order": order_id,
+            "order_id": order_id,
+        }
+        try:
+            return safe_eval(expression, context)
+        except:
+            return False

@@ -56,6 +56,7 @@
                                         name="namespace_id"
                                         readonly="state == 'installed'"
                                     />
+                                    <field name="product_id" />
                                     <field name="partner_id" />
                                     <field name="ingress_url" widget="url" />
                                 </group>

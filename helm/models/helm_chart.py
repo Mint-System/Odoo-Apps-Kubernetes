@@ -71,7 +71,6 @@ class HelmChart(models.Model):
 
         # Set defaults
         values["chart_id"] = self.id
-        values["name"] = self.name
 
         # Copy values
         release_value_ids = self.release_value_ids.copy()
@@ -109,7 +108,9 @@ class HelmChart(models.Model):
             "view_mode": "form",
             "target": "new",
             "context": {
+                "default_name": self.name,
                 "default_chart_id": self.id,
+                "default_product_id": self.product_ids[0].id,
             },
         }
 

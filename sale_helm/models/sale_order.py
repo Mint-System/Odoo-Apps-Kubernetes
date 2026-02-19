@@ -52,11 +52,12 @@ class SaleOrder(models.Model):
                 {"name": order.project_name, "cluster_id": order.cluster_id.id}
             )
             for line in order.order_line:
-                # Prepare values dictionary for create_release
                 release_values = {
+                    "name": line.product_id.chart_id.name,
                     "sale_line_id": line.id,
                     "namespace_id": namespace_id.id,
                     "cluster_id": namespace_id.cluster_id.id,
+                    "product_id": line.product_id.id,
                     "partner_id": order.partner_id.id,
                 }
                 release_id = line.product_id.chart_id.create_release(release_values)
