@@ -1,7 +1,7 @@
 import logging
 import subprocess
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -23,6 +23,7 @@ class HelmChart(models.Model):
         string="Dynamic values",
         help="These values will be computed and applied to the release values.",
     )
+    release_count = fields.Integer(compute="_compute_release_count", string="Releases")
     release_value_ids = fields.One2many(
         "helm.chart.value",
         "release_chart_id",
@@ -57,6 +58,11 @@ class HelmChart(models.Model):
             else:
                 chart.values = ""
 
+    @api.depends("release_value_ids.release_id")
+    def _compute_release_count(self):
+        for chart in self:
+            chart.release_count = self.env["helm.release"].search_count([("chart_id", "=", chart.id)])
+
     def create_release(self, values):
         """
         Create release from chart. Select the first context of the cluster.
@@ -66,6 +72,7 @@ class HelmChart(models.Model):
 
         # Set defaults
         values["chart_id"] = self.id
+        values["name"] = self.name
 
         # Copy values
         release_value_ids = self.release_value_ids.copy()
@@ -105,4 +112,18 @@ class HelmChart(models.Model):
             "context": {
                 "default_chart_id": self.id,
             },
+        }
+
+    def action_view_releases(self):
+        """
+        Opens the list view of releases for this chart.
+        """
+        self.ensure_one()
+        return {
+            "name": "Releases",
+            "type": "ir.actions.act_window",
+            "res_model": "helm.release",
+            "view_mode": "list,form",
+            "domain": [("chart_id", "=", self.id)],
+            "context": {"search_default_chart_id": self.id, "default_chart_id": self.id},
         }

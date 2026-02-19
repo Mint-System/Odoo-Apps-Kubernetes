@@ -9,13 +9,13 @@ _logger = logging.getLogger(__name__)
 class HelmRelease(models.Model):
     _inherit = "helm.release"
 
-    sale_line_ids = fields.One2many("sale.order.line", "release_id")
+    sale_line_id = fields.Many2one("sale.order.line", string="Sale Order Line")
 
     def _eval_value(self, expression):
         """
         Add order_id to context.
         """
-        order_id = self.sale_line_ids[0].order_id if self.sale_line_ids else False
+        order_id = self.sale_line_id.order_id if self.sale_line_id else False
         if order_id:
             return safe_eval(
                 expression,

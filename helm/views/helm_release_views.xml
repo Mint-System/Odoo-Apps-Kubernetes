@@ -57,6 +57,7 @@
                                         readonly="state == 'installed'"
                                     />
                                     <field name="partner_id" />
+                                    <field name="sale_line_id" />
                                     <field name="ingress_url" widget="url" />
                                 </group>
                                 <group string="Updatable values">

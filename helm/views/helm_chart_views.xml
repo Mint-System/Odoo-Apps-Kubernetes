@@ -13,12 +13,6 @@
                         type="object"
                         invisible="state != 'added'"
                     />
-                    <button
-                        string="Releases"
-                        name="%(helm.action_helm_release_view)d"
-                        type="action"
-                        context="{'search_default_chart_id': id, 'default_chart_id': id}"
-                    />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -26,6 +20,17 @@
                             <field name="name" />
                         </h1>
                     </div>
+                    <button_box>
+                        <button
+                            string="Releases"
+                            name="action_view_releases"
+                            type="object"
+                            context="{'search_default_chart_id': id, 'default_chart_id': id}"
+                            class="oe_stat_button"
+                        >
+                            <field name="release_count" widget="statinfo" />
+                        </button>
+                    </button_box>
                     <group>
                         <group>
                             <field name="repo_id" />

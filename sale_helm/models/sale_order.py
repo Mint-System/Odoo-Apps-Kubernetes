@@ -20,8 +20,8 @@ class SaleOrder(models.Model):
     @api.depends("order_line.product_id", "order_line.release_id")
     def _compute_release_ids(self):
         for order in self:
-            order.release_ids = order.order_line.release_id
-            order.release_count = len(order.order_line.release_id)
+            order.release_ids = order.order_line.mapped("release_id")
+            order.release_count = len(order.release_ids)
 
     def _compute_chart_ids(self):
         for rec in self:
@@ -54,10 +54,10 @@ class SaleOrder(models.Model):
             for line in order.order_line:
                 # Prepare values dictionary for create_release
                 release_values = {
+                    "sale_line_id": line.id,
                     "namespace_id": namespace_id.id,
-                    "cluster_id": namespace_id.cluster_id.id,  # Add cluster_id
+                    "cluster_id": namespace_id.cluster_id.id,
                     "partner_id": order.partner_id.id,
-                    "name": f"{order.project_name}",
                 }
                 release_id = line.product_id.chart_id.create_release(release_values)
                 line.release_id = release_id

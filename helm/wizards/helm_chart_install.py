@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HelmChartInstall(models.TransientModel):
@@ -7,6 +7,15 @@ class HelmChartInstall(models.TransientModel):
 
     name = fields.Char(string="Release Name", required=True)
     chart_id = fields.Many2one("helm.chart", required=True)
+
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if "chart_id" in fields and "name" in fields and self._context.get("active_id"):
+            chart = self.env["helm.chart"].browse(self._context["active_id"])
+            res["name"] = chart.name
+        return res
+
     cluster_id = fields.Many2one("kubectl.cluster", required=True)
     create_namespace = fields.Boolean()
     namespace = fields.Char(help="Namespace with this input will be created.")
