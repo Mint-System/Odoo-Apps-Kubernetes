@@ -27,8 +27,7 @@
                             type="object"
                             icon="fa-list"
                             context="{'search_default_chart_id': id, 'default_chart_id': id}"
-                        >
-                        </button>
+                        />
                     </div>
                     <group>
                         <group>
