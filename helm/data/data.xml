@@ -35,14 +35,14 @@
 
     <record id="product_odoo_community_edition" model="product.product">
         <field name="name">Odoo Community Edition</field>
-        <field name="type">consu</field>
+        <field name="type">service</field>
         <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
     </record>
 
     <record id="product_odoo_enterprise_edition" model="product.product">
         <field name="name">Odoo Enterprise Edition</field>
-        <field name="type">consu</field>
+        <field name="type">service</field>
         <field name="list_price">80</field>
         <field name="chart_id" ref="helm.chart_odoo" />
     </record>

@@ -22,7 +22,7 @@
                     <group>
                         <group>
                             <field name="project_name" />
-                            <field name="domain" />
+                            <field name="custom_domain" />
                             <field name="consulting_partner_id" />
                             <field name="cluster_id" />
                         </group>

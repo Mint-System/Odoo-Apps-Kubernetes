@@ -77,18 +77,15 @@
                                                         selected="True"
                                                         disabled="True"
                                                     >-- Please select --</option>
-                                                    <option
-                                                        id="ok63bmzhjk6s0"
-                                                        value="1"
-                                                    >APPUiO</option>
-                                                    <option
-                                                        id="ok63bmzhjk6s1"
-                                                        value="2"
-                                                    >Infomaniak</option>
-                                                    <option
-                                                        id="ok63bmzhjk6s2"
-                                                        value="2"
-                                                    >Exoscale</option>
+                                                    <t
+                                                        t-foreach="request.env['kubectl.cluster'].sudo().search([])"
+                                                        t-as="cluster"
+                                                    >
+                                                        <option
+                                                            t-att-value="cluster.id"
+                                                            t-esc="cluster.display_name"
+                                                        />
+                                                    </t>
                                                 </select>
                                             </div>
                                         </div>
@@ -101,7 +98,7 @@
                                         Learn more about the <u>
                                         <a
                                             target="_blank"
-                                            href="/kubernetes-clusters"
+                                            href="/clusters"
                                         >Kubernetes Clusters.</a>
                                     </u><br /><br />
                                     </div>
@@ -137,14 +134,15 @@
                                                         selected="True"
                                                         disabled="True"
                                                     >-- Please select --</option>
-                                                    <option
-                                                        id="olitcpoyvm10"
-                                                        value="0"
-                                                    >Mint System GmbH</option>
-                                                    <option
-                                                        id="olitcpoyvm11"
-                                                        value="0"
-                                                    >r4ts GmbH</option>
+                                                    <t
+                                                        t-foreach="request.env['res.partner'].sudo().search([('helm_product_ids','!=',False)])"
+                                                        t-as="partner"
+                                                    >
+                                                        <option
+                                                            t-att-value="partner.id"
+                                                            t-esc="partner.name"
+                                                        />
+                                                    </t>
                                                 </select>
                                             </div>
                                         </div>
@@ -157,7 +155,7 @@
                                         Learn more about the <u>
                                         <a
                                             target="_blank"
-                                            href="/consulting-partners"
+                                            href="/partners"
                                         >Consulting Partners.</a>
                                     </u><br /><br />
                                     </div>
@@ -186,10 +184,11 @@
                                                     type="text"
                                                     class="s_website_form_input form-control"
                                                     name="project_name"
-                                                    minlength="5"
+                                                    minlength="4"
                                                     pattern="[A-z0-9A-z\-]+"
                                                     required="1"
                                                     placeholder="my-service"
+                                                    data-validation="project_name_validation"
                                                 />
                                             </div>
                                             <div
@@ -217,14 +216,14 @@
                                             >
                                                 <span
                                                     class="s_website_form_label_content"
-                                                >Domain</span>
+                                                >Custom Domain</span>
                                             </label>
                                             <div class="col-sm">
                                                 <input
                                                     id="helm2"
                                                     type="text"
                                                     class="s_website_form_input form-control"
-                                                    name="domain"
+                                                    name="custom_domain"
                                                     pattern="[A-z0-9A-z\.\-]+"
                                                     placeholder=""
                                                 />
@@ -273,6 +272,37 @@
                                         <span id="s_website_form_result" />
                                     </div>
                                 </div>
+                                <t
+                                    t-set="order"
+                                    t-value="request.website.sale_get_order()"
+                                />
+                                <t t-if="order">
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            // Pre-populate form fields with existing order values
+                                            <t t-if="order.cluster_id">
+                                                $('select[name="cluster_id"]').val(<t
+                                        t-esc="order.cluster_id.id"
+                                    />);
+                                            </t>
+                                            <t t-if="order.consulting_partner_id">
+                                                $('select[name="consulting_partner_id"]').val(<t
+                                        t-esc="order.consulting_partner_id.id"
+                                    />);
+                                            </t>
+                                            <t t-if="order.project_name">
+                                                $('input[name="project_name"]').val('<t
+                                        t-esc="order.project_name"
+                                    />');
+                                            </t>
+                                            <t t-if="order.custom_domain">
+                                                $('input[name="custom_domain"]').val('<t
+                                        t-esc="order.custom_domain"
+                                    />');
+                                            </t>
+                                        });
+                                    </script>
+                                </t>
                             </form>
                         </div>
                     </section>

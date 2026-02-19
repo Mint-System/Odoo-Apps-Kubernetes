@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     project_name = fields.Char(inverse="_inverse_project_name")
-    domain = fields.Char()
+    custom_domain = fields.Char()
     consulting_partner_id = fields.Many2one("res.partner", domain="[('helm_product_ids','!=',False)]")
     cluster_id = fields.Many2one("kubectl.cluster")
     chart_ids = fields.One2many("helm.chart", compute="_compute_chart_ids")
@@ -42,11 +42,24 @@ class SaleOrder(models.Model):
         """
         res = super().action_confirm()
         for order in self.filtered("chart_ids"):
+            # Validate required fields for Helm deployment
+            if not order.cluster_id:
+                raise ValidationError(_("Cluster is required for Helm chart deployment."))
+            if not order.project_name:
+                raise ValidationError(_("Project name is required for Helm chart deployment."))
+
             namespace_id = self.env["kubectl.namespace"].get_or_create(
                 {"name": order.project_name, "cluster_id": order.cluster_id.id}
             )
             for line in order.order_line:
-                release_id = line.product_id.chart_id.create_release(namespace_id, order.partner_id)
+                # Prepare values dictionary for create_release
+                release_values = {
+                    "namespace_id": namespace_id.id,
+                    "cluster_id": namespace_id.cluster_id.id,  # Add cluster_id
+                    "partner_id": order.partner_id.id,
+                    "name": f"{order.project_name}-{line.product_id.name}".replace(" ", "-").lower(),
+                }
+                release_id = line.product_id.chart_id.create_release(release_values)
                 line.release_id = release_id
                 release_id._compute_values()
                 release_id.action_install()

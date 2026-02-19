@@ -220,5 +220,4 @@
         action="action_helm_release_view"
         sequence="10"
     />
-
 </odoo>
