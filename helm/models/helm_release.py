@@ -55,17 +55,18 @@ class HelmRelease(models.Model):
             if not rec.namespace and rec.namespace_id:
                 rec.namespace = rec.namespace_id.name
 
+    @api.model
+    def generate_password(self, length=8):
+        """
+        Generate a random password with letters and digits.
+        """
+        import random
+        import string
+
+        return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
+
     def _eval_value(self, expression):
-        def generate_password(length=8):
-            """
-            Generate a random password with letters and digits.
-            """
-            import random
-            import string
-
-            return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
-
-        context = {"self": self, "release": self, "generate_password": generate_password}
+        context = {"self": self, "release": self, "generate_password": self.generate_password}
         return safe_eval(expression, context)
 
     @api.depends("chart_id", "chart_id.value_ids", "state", "partner_id")

@@ -7,6 +7,8 @@
             <list>
                 <field name="path" />
                 <field name="value" />
+                <field name="filter_cluster_ids" widget="many2many_tags" />
+                <field name="filter_product_ids" widget="many2many_tags" />
                 <field name="chart_id" />
                 <field name="release_id" />
             </list>
@@ -22,6 +24,7 @@
                     <group>
                         <group>
                             <field name="filter_cluster_ids" widget="many2many_tags" />
+                            <field name="filter_product_ids" widget="many2many_tags" />
                             <field name="path" />
                             <field name="value" />
                             <field name="option_id" context="{'default_path': path}" />

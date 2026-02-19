@@ -14,6 +14,11 @@ class HelmChartValue(models.Model):
     release_id = fields.Many2one("helm.release", ondelete="cascade", help="Value is copied and linked to this release.")
 
     filter_cluster_ids = fields.Many2many("kubectl.cluster", help="Apply value to these clusters only.")
+    product_ids = fields.One2many("product.product", related="chart_id.product_ids")
+    filter_product_ids = fields.Many2many(
+        "product.product", help="Apply value to these products only.", domain="[('id', 'in', product_ids)]"
+    )
+
     path = fields.Char(help="Path to the nested key of the values.yaml.", required=True)
     value = fields.Char(help="Enter python code to define the value.")
     option_id = fields.Many2one(

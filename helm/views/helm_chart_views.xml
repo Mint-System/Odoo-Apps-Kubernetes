@@ -41,6 +41,7 @@
                                 >
                                     <list context="{'default_chart_id': id}">
                                         <field name="filter_cluster_ids" />
+                                        <field name="filter_product_ids" />
                                         <field name="path" />
                                         <field name="value" />
                                     </list>
