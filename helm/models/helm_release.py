@@ -148,7 +148,7 @@ class HelmRelease(models.Model):
 
         # Check if chart has been added
         if self.chart_id.state != "added":
-            raise ValidationError(_(f"The chart '{self.chart_id.name}' has not been added."))
+            raise ValidationError(_("The chart '%s' has not been added.", self.chart_id.name))
 
         try:
             # Create namespace in Kubernetes first if needed
@@ -189,10 +189,10 @@ class HelmRelease(models.Model):
 
             self.write({"state": "installed"})
             self.output = result.stdout
-            return display_notification(_("Chart Installed"), result.stdout, "success")
+            return display_notification("Chart Installed", result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
-            return display_notification(_("Installing Chart Failed"), e.stderr, "danger")
+            return display_notification("Installing Chart Failed", e.stderr, "danger")
 
     def _create_secrets(self):
         """
@@ -279,10 +279,10 @@ class HelmRelease(models.Model):
             result = self.cluster_id.context_ids[0].run(command, self.values)
 
             self.output = result.stdout
-            return display_notification(_("Chart Upgraded"), result.stdout, "success")
+            return display_notification("Chart Upgraded", result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
-            return display_notification(_("Upgrading Chart Failed"), e.stderr, "danger")
+            return display_notification("Upgrading Chart Failed", e.stderr, "danger")
 
     def action_uninstall(self):
         """
@@ -302,7 +302,7 @@ class HelmRelease(models.Model):
             )
             self.write({"state": "draft"})
             self.output = result.stdout
-            return display_notification(_("Chart Uninstalled"), result.stdout, "success")
+            return display_notification("Chart Uninstalled", result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
-            return display_notification(_("Uninstalling Chart Failed"), e.stderr, "danger")
+            return display_notification("Uninstalling Chart Failed", e.stderr, "danger")
