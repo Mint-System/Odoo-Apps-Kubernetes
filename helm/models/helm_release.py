@@ -66,7 +66,7 @@ class HelmRelease(models.Model):
         return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
 
     def _eval_value(self, expression):
-        context = {"self": self, "release": self, "generate_password": self.generate_password}
+        context = {"self": self, "release": self, "release_id": self, "generate_password": self.generate_password}
         return safe_eval(expression, context)
 
     @api.depends("chart_id", "chart_id.value_ids", "state", "partner_id")
