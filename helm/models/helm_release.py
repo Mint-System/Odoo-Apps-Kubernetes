@@ -23,6 +23,7 @@ class HelmRelease(models.Model):
     )
     output = fields.Text()
     ingress_url = fields.Char(compute="_compute_ingress_url")
+    display_name = fields.Char(compute="_compute_display_name")
 
     chart_id = fields.Many2one("helm.chart", help="Chart to installed.", required=True)
     cluster_id = fields.Many2one("kubectl.cluster", help="Target cluster to deploy to.", required=True)
@@ -54,6 +55,13 @@ class HelmRelease(models.Model):
         for rec in self:
             if not rec.namespace and rec.namespace_id:
                 rec.namespace = rec.namespace_id.name
+
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.namespace:
+                rec.display_name = f"{rec.name} ({rec.namespace})"
+            else:
+                rec.display_name = rec.name
 
     @api.model
     def generate_password(self, length=8):
@@ -149,15 +157,30 @@ class HelmRelease(models.Model):
                     {"name": self.namespace, "cluster_id": self.cluster_id.id}
                 )
 
+            # Create namespace in Kubernetes first if needed
+            if self.create_namespace:
+                context = self.cluster_id.context_ids[0]
+                try:
+                    command = [
+                        "kubectl",
+                        "create",
+                        "namespace",
+                        self.namespace,
+                    ]
+                    result = context.run(command)
+                    _logger.info(f"Created namespace {self.namespace}")
+                except subprocess.CalledProcessError as e:
+                    _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
+                    raise
+
             # Create secrets before chart installation
             self._create_secrets()
 
             # Setup install command
             command = ["helm", "install", self.name, f"{self.chart_id.repo_id.name}/{self.chart_id.name}"]
 
-            # Add create namespace option
-            if self.create_namespace:
-                command += ["--create-namespace", "--namespace", self.namespace]
+            # Add namespace option
+            command += ["--namespace", self.namespace]
 
             # Run command
             result = self.cluster_id.context_id.run(command, self.values)

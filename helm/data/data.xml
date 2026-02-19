@@ -55,7 +55,7 @@
 
     <record id="chart_odoo_value_staging_enable" model="helm.chart.value">
         <field name="path">staging.enabled</field>
-        <field name="value">True</field>
+        <field name="value">'true'</field>
         <field name="chart_id" eval="chart_odoo" />
     </record>
 

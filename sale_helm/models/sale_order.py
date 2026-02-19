@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
                     "namespace_id": namespace_id.id,
                     "cluster_id": namespace_id.cluster_id.id,  # Add cluster_id
                     "partner_id": order.partner_id.id,
-                    "name": f"{order.project_name}-{line.product_id.name}".replace(" ", "-").lower(),
+                    "name": f"{order.project_name}",
                 }
                 release_id = line.product_id.chart_id.create_release(release_values)
                 line.release_id = release_id

@@ -26,7 +26,7 @@
             eval="[(4, ref('kubectl.kubectl_cluster_axo_demo'))]"
         />
         <field name="path">vshnPostgres.enabled</field>
-        <field name="value">True</field>
+        <field name="value">'true'</field>
     </record>
 
     <record id="chart_odoo_value_cnpg_enabled_demo" model="helm.chart.value">
