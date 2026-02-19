@@ -151,12 +151,6 @@ class HelmRelease(models.Model):
             raise ValidationError(_(f"The chart '{self.chart_id.name}' has not been added."))
 
         try:
-            # Create namespace object if needed
-            if self.create_namespace and not self.namespace_id:
-                self.namespace_id = self.env["kubectl.namespace"].create(
-                    {"name": self.namespace, "cluster_id": self.cluster_id.id}
-                )
-
             # Create namespace in Kubernetes first if needed
             if self.create_namespace:
                 context = self.cluster_id.context_ids[0]
@@ -168,6 +162,10 @@ class HelmRelease(models.Model):
                         self.namespace,
                     ]
                     result = context.run(command)
+                    if not self.namespace_id:
+                        self.namespace_id = self.env["kubectl.namespace"].create(
+                            {"name": self.namespace, "cluster_id": self.cluster_id.id}
+                        )
                     _logger.info(f"Created namespace {self.namespace}")
                 except subprocess.CalledProcessError as e:
                     _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
@@ -177,10 +175,14 @@ class HelmRelease(models.Model):
             self._create_secrets()
 
             # Setup install command
-            command = ["helm", "install", self.name, f"{self.chart_id.repo_id.name}/{self.chart_id.name}"]
-
-            # Add namespace option
-            command += ["--namespace", self.namespace]
+            command = [
+                "helm",
+                "install",
+                self.name,
+                f"{self.chart_id.repo_id.name}/{self.chart_id.name}",
+                "--namespace",
+                self.namespace,
+            ]
 
             # Run command
             result = self.cluster_id.context_id.run(command, self.values)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="helm_release_form_view" model="ir.ui.view">
+        <field name="name">sale_helm.helm_release_form_view</field>
+        <field name="model">helm.release</field>
+        <field name="inherit_id" ref="helm.helm_release_form_view" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sale_line_id" />
+            </field>
+        </field>
+    </record>
+</odoo>
