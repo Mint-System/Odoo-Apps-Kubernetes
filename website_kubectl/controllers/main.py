@@ -23,3 +23,19 @@ class WebsiteKubectlClusterPage(http.Controller):
                 }
                 return request.render("website_kubectl.cluster_page", values)
         raise request.not_found()
+
+    @http.route(["/clusters"], type="http", auth="public", website=True)
+    def clusters_list(self, **post):
+        clusters = request.env["kubectl.cluster"].sudo().search([("website_published", "=", True)])
+        values = {
+            "clusters": clusters,
+        }
+        return request.render("website_kubectl.clusters_list", values)
+
+    @http.route(["/partners"], type="http", auth="public", website=True)
+    def partners_list(self, **post):
+        partners = request.env["res.partner"].sudo().search([("website_published", "=", True)])
+        values = {
+            "partners": partners,
+        }
+        return request.render("website_kubectl.partners_list", values)

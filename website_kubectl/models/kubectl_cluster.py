@@ -13,6 +13,7 @@ class KubectlCluster(models.Model):
     website_description = fields.Html(
         "Website Kubectl Cluster Description", strip_style=True, sanitize_overridable=True, translate=html_translate
     )
+    website_short_description = fields.Char("Website Short Description", translate=True)
 
     def _compute_website_url(self):
         for rec in self:

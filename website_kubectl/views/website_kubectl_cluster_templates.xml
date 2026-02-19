@@ -26,16 +26,101 @@
     </template>
 
     <template id="cluster_detail" name="Cluster Details">
-        <div class="row">
-            <div class="d-flex align-items-center flex-wrap mt-4 mb-4">
-                <div class="flex-grow-1">
-                    <h1 id="cluster_name" t-field="cluster.name" />
+        <div
+            class="row"
+            itemscope="itemscope"
+            itemtype="http://schema.org/Organization"
+        >
+            <div class="col-lg-3 col-md-4">
+                <t t-if="cluster.provider_id">
+                    <div
+                        t-field="cluster.provider_id.avatar_1920"
+                        t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border", "itemprop": "image"}'
+                    />
+                    <div class="o_wcrm_contact_details">
+                        <div
+                            t-field="cluster.provider_id.self"
+                            t-options='{
+                            "widget": "contact",
+                            "fields": ["address", "website", "phone", "email"],
+                            "with_microdata": True,
+                        }'
+                        />
+                        <t t-out="left_column or ''" />
+                    </div>
+                </t>
+            </div>
+            <div class="col-lg-9 col-md-8">
+                <div class="d-flex align-items-center flex-wrap mb-4">
+                    <div class="flex-grow-1">
+                        <h1 id="cluster_name" t-field="cluster.name" itemprop="name" />
+                    </div>
+                </div>
+                <t t-if="cluster">
+                    <div t-field="cluster.website_description" class="mb-5" />
+                </t>
+                <t t-out="right_column or ''" />
+            </div>
+        </div>
+    </template>
+    
+    <template id="clusters_list" name="Clusters List">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container mt-5">
+                    <h1>Kubernetes Clusters</h1>
+                    <div class="row mt-4">
+                        <t t-foreach="clusters" t-as="cluster">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a
+                                                t-attf-href="/clusters/{{ cluster.id }}"
+                                                t-field="cluster.name"
+                                            />
+                                        </h5>
+                                        <div
+                                            t-field="cluster.website_short_description"
+                                            class="card-text"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
                 </div>
             </div>
-            <t t-if="cluster">
-                <div t-field="cluster.website_description" class="mb-5" />
-            </t>
-            <t t-out="right_column or ''" />
-        </div>
+        </t>
+    </template>
+
+    <template id="partners_list" name="Partners List">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container mt-5">
+                    <h1>Partners</h1>
+                    <div class="row mt-4">
+                        <t t-foreach="partners" t-as="partner">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a
+                                                t-attf-href="/partners/{{ partner.id }}"
+                                                t-field="partner.display_name"
+                                            />
+                                        </h5>
+                                        <div
+                                            t-field="partner.website_short_description"
+                                            class="card-text"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
     </template>
 </odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Menu items for website -->
+    <record id="menu_clusters" model="website.menu">
+        <field name="name">Clusters</field>
+        <field name="url">/clusters</field>
+        <field name="parent_id" ref="website.main_menu" />
+        <field name="sequence" type="int">50</field>
+    </record>
+
+    <record id="menu_partners" model="website.menu">
+        <field name="name">Partners</field>
+        <field name="url">/partners</field>
+        <field name="parent_id" ref="website.main_menu" />
+        <field name="sequence" type="int">55</field>
+    </record>
+</odoo>

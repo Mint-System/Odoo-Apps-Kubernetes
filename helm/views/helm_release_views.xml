@@ -217,7 +217,8 @@
         id="helm.menu_helm_release"
         name="Releases"
         parent="helm.menu_root"
-        action="helm.action_helm_release_view"
+        action="action_helm_release_view"
         sequence="10"
     />
+
 </odoo>
