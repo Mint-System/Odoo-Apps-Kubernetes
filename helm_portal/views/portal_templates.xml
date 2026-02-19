@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Add "Your Releases" entry to portal home page -->
+    <template
+        id="portal_my_home_helm"
+        name="Helm Releases"
+        customize_show="True"
+        inherit_id="portal.portal_my_home"
+        priority="25"
+    >
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_vendor_category_enable" t-value="True" />
+        </xpath>
+        <div id="portal_vendor_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/helm_portal/static/src/img/helm.svg'" />
+                <t t-set="text">Show and update your Helm releases</t>
+                <t t-set="title">Your Releases</t>
+                <t t-set="url" t-value="'/my/releases'" />
+                <t t-set="placeholder_count" t-value="'release_count'" />
+            </t>
+        </div>
+    </template>
+
+    <!-- Portal breadcrumbs for releases -->
+    <template
+        id="portal_my_releases_breadcrumbs"
+        name="Portal layout : releases menu entries"
+        inherit_id="portal.portal_breadcrumbs"
+        priority="25"
+    >
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li
+                t-if="page_name == 'releases' or release"
+                t-attf-class="breadcrumb-item #{'active ' if not release else ''}"
+            >
+                <a
+                    t-if="release"
+                    t-attf-href="/my/releases?{{ keep_query() }}"
+                >Releases</a>
+                <t t-else="">Releases</t>
+            </li>
+            <li t-if="release" class="breadcrumb-item active">
+                <t t-esc="release.name" />
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Portal releases list view -->
+    <template id="portal_my_releases" name="My Helm Releases">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Helm Releases</t>
+            </t>
+            <t t-if="not releases">
+                <p
+                    class="alert alert-warning"
+                >There are currently no Helm releases for your account.</p>
+            </t>
+            <t t-if="releases" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Name</th>
+                        <th>Link</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <t t-foreach="releases" t-as="release">
+                    <tr>
+                        <td>
+                            <a t-att-href="release.get_portal_url()">
+                                <t t-esc="release.name" />
+                            </a>
+                        </td>
+                        <td>
+                            <t t-if="release.ingress_url">
+                                <a t-att-href="release.ingress_url" target="_blank">
+                                    <t t-esc="release.ingress_url" />
+                                </a>
+                            </t>
+                            <t t-else="">
+                                Not available
+                            </t>
+                        </td>
+                        <td>
+                            <t t-esc="release.state" />
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Portal release detail view -->
+    <template id="portal_my_release" name="Helm Release">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <div class="container">
+                <t t-if="notification">
+                    <div
+                        t-attf-class="alert alert-#{notification['type']}"
+                        role="alert"
+                    >
+                        <t t-esc="notification['message']" />
+                        <t t-if="notification['output']">
+                            <div class="mt-2">
+                                <strong>Output:</strong>
+                                <pre>
+                                    <t t-esc="notification['output']" />
+                                </pre>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <h1>
+                    <t t-esc="release.name" />
+                </h1>
+
+                <div class="mb-3">
+                    <strong>Link:</strong>
+                    <t t-if="release.ingress_url">
+                        <a t-att-href="release.ingress_url" target="_blank">
+                            <t t-esc="release.ingress_url" />
+                        </a>
+                    </t>
+                    <t t-else="">
+                        Not available
+                    </t>
+                </div>
+
+                <div class="mb-3">
+                    <strong>State:</strong>
+                    <t t-esc="release.state" />
+                </div>
+
+                <h3>Release Configuration</h3>
+                <form
+                    method="post"
+                    t-att-action="release.get_portal_url(update='True')"
+                >
+                    <input type="hidden" name="update" value="True" />
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="release.value_ids" t-as="value">
+                                <tr>
+                                    <td>
+                                        <t t-esc="value.path" />
+                                    </td>
+                                    <td>
+                                        <t t-if="value.option_id">
+                                            <select
+                                                name="value_"
+                                                t-att-name="'value_' + str(value.id)"
+                                                class="form-control"
+                                            >
+                                                <t
+                                                    t-foreach="value.option_id.search([('path', '=', value.path)])"
+                                                    t-as="option"
+                                                >
+                                                    <option
+                                                        t-att-value="option.value"
+                                                        t-att-selected="option.value == (value.option_id.value if value.option_id else value.value)"
+                                                    >
+                                                        <t t-esc="option.value" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </t>
+                                        <t t-else="">
+                                            <input
+                                                type="text"
+                                                name="value_"
+                                                t-att-name="'value_' + str(value.id)"
+                                                class="form-control"
+                                                t-att-value="value.value or ''"
+                                            />
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >Update Release</button>
+                </form>
+
+                <h3 class="mt-4">Last Output:</h3>
+                <pre class="bg-light p-3 rounded">
+                    <t t-esc="release.output or 'No output available'" />
+                </pre>
+            </div>
+        </t>
+    </template>
+</odoo>

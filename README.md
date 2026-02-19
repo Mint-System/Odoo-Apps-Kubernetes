@@ -16,6 +16,7 @@ git clone git@github.com:Mint-System/Odoo-Apps-Kubernetes.git ./addons/kubernete
 | --- | --- |
 | [helm_import](helm_import) |         Import data from Helm repo. |
 | [helm](helm) |         Apply Helm charts. |
+| [helm_portal](helm_portal) |         Update Helm releases in portal. |
 | [kubectl_import](kubectl_import) |         Import data from Kubernetes cluster. |
 | [kubectl](kubectl) |         Manage kubectl configuration. |
 | [sale_helm](sale_helm) |         Sell services and assign hosting provider and consulting partner. |

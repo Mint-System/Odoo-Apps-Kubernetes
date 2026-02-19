@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="helmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90e2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a6bcb;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Helm base -->
+  <rect x="16" y="24" width="32" height="24" rx="4" ry="4" fill="url(#helmGradient)" stroke="#2a6bcb" stroke-width="2"/>
+  
+  <!-- Helm top curve -->
+  <path d="M12 24 Q20 16 32 24 Q44 16 52 24" fill="url(#helmGradient)" stroke="#2a6bcb" stroke-width="2"/>
+  
+  <!-- Helm details -->
+  <rect x="24" y="32" width="16" height="8" rx="2" ry="2" fill="white" stroke="#ccc" stroke-width="1"/>
+  <rect x="28" y="36" width="8" height="4" rx="1" ry="1" fill="#4a90e2" stroke="#2a6bcb" stroke-width="1"/>
+  
+  <!-- Shadow effect -->
+  <ellipse cx="32" cy="56" rx="20" ry="4" fill="#2a6bcb" opacity="0.2"/>
+</svg>
