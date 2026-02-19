@@ -55,7 +55,7 @@
 
     <record id="chart_odoo_value_staging_enable" model="helm.chart.value">
         <field name="path">staging.enabled</field>
-        <field name="value">'true'</field>
+        <field name="value">True</field>
         <field name="chart_id" eval="chart_odoo" />
     </record>
 
@@ -101,7 +101,7 @@
     <record id="chart_odoo_value_download_enterprise" model="helm.chart.value">
         <field name="chart_id" ref="helm.chart_odoo" />
         <field name="path">downloadOdooEnterprise</field>
-        <field name="value">true</field>
+        <field name="value">True</field>
         <field
             name="filter_product_ids"
             eval="[(4, ref('product_odoo_enterprise_edition'))]"

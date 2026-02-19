@@ -23,7 +23,6 @@ class HelmChart(models.Model):
         string="Dynamic values",
         help="These values will be computed and applied to the release values.",
     )
-    release_count = fields.Integer(compute="_compute_release_count", string="Releases")
     release_value_ids = fields.One2many(
         "helm.chart.value",
         "release_chart_id",
