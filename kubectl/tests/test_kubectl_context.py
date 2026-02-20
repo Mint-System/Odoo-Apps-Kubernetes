@@ -17,7 +17,6 @@ class TestKubectlContext(TransactionCase):
         self.provider = self.env["res.partner"].create(
             {
                 "name": "localhost",
-                "is_provider": True,
             }
         )
 
@@ -27,7 +26,7 @@ class TestKubectlContext(TransactionCase):
                 "alias": "loc",
                 "server": "https://host.docker.internal:35249",
                 "domain": "knd.local",
-                "provider_id": self.provider.id,
+                "partner_id": self.provider.id,
             }
         )
 

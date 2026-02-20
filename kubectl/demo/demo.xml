@@ -2,7 +2,6 @@
 <odoo>
     <record id="res_partner_vshn_demo" model="res.partner">
         <field name="name">VSHN AG</field>
-        <field name="is_provider" eval="True" />
         <field name="email">info@vshn.ch</field>
         <field name="website">https://www.vshn.ch</field>
         <field name="phone">+41 44 500 86 00</field>
@@ -14,7 +13,6 @@
 
     <record id="res_partner_localhost_demo" model="res.partner">
         <field name="name">Localhost Development</field>
-        <field name="is_provider" eval="True" />
         <field name="email">dev@localhost.test</field>
         <field name="website">http://localhost</field>
         <field name="phone">+41 44 123 45 67</field>
@@ -29,7 +27,7 @@
         <field name="alias">loc</field>
         <field name="server">https://127.0.0.1:35249</field>
         <field name="domain">knd.local</field>
-        <field name="provider_id" ref="kubectl.res_partner_localhost_demo" />
+        <field name="partner_id" ref="kubectl.res_partner_localhost_demo" />
     </record>
 
     <record id="kubectl_cluster_axo_demo" model="kubectl.cluster">
@@ -37,7 +35,7 @@
         <field name="server">https://api.exoscale-ch-gva-2-0.appuio.cloud:6443</field>
         <field name="alias">axo</field>
         <field name="domain">axo.mintcloud.ch</field>
-        <field name="provider_id" ref="kubectl.res_partner_vshn_demo" />
+        <field name="partner_id" ref="kubectl.res_partner_vshn_demo" />
     </record>
 
     <record id="kubectl_namespace_default_demo" model="kubectl.namespace">

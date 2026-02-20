@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']" position="after">
                 <page string="Kubernetes" name="kubernetes" groups="kubectl.group_user">
+                <group>
                     <group>
-                        <group>
-                            <field name="is_provider" />
-                        </group>
+                        <field name="cluster_ids" />
                     </group>
+                </group>
                 </page>
             </xpath>
         </field>

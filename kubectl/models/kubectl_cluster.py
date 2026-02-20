@@ -17,7 +17,7 @@ class KubectlCluster(models.Model):
     server = fields.Char(required=True)
     domain = fields.Char(required=True)
 
-    provider_id = fields.Many2one("res.partner", domain="[('is_provider','=', True)]", required=True)
+    partner_id = fields.Many2one("res.partner", string="Partner", required=True)
     context_ids = fields.One2many("kubectl.context", "cluster_id")
     context_id = fields.Many2one("kubectl.context", string="Default Context")
 
