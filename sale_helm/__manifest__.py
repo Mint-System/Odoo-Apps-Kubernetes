@@ -10,7 +10,12 @@
     "version": "18.0.1.0.0",
     "license": "OPL-1",
     "depends": ["helm", "sale_management"],
-    "data": ["data/data.xml", "views/sale_order_views.xml", "views/helm_release_views.xml"],
+    "data": [
+        "data/data.xml",
+        "data/mail_template_data.xml",
+        "views/sale_order_views.xml",
+        "views/helm_release_views.xml",
+    ],
     "installable": True,
     "application": False,
     "auto_install": False,

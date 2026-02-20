@@ -82,6 +82,16 @@
                         <strong
                                     >Note:</strong> These values will be copied to the release and can be updated.
                     </p>
+                                    <br />
+                                    <label
+                                        for="customer_notice_template"
+                                        string="Customer Notice Template"
+                                    />
+                                    <br />
+                                    <field
+                                        name="customer_notice_template"
+                                        nolabel="1"
+                                    />
                                 </group>
                             </group>
                         </page>

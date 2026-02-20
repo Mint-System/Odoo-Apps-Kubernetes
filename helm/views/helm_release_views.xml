@@ -75,6 +75,11 @@
                                             />
                                         </list>
                                     </field>
+                                    <field
+                                        name="customer_notice"
+                                        widget="html"
+                                        readonly="1"
+                                    />
                                 </group>
                                 <group string="values.yaml">
                                     <field

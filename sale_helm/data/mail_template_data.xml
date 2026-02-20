@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="email_template_sale_order_helm_release" model="mail.template">
+        <field name="name">Sale Order: Helm Release Access Information</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field
+            name="subject"
+        >{{ doc.order_line[0].product_id.name }} - Access Information</field>
+        <field
+            name="email_from"
+        >{{ (doc.user_id.email_formatted or doc.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ doc.partner_id.email_formatted }}</field>
+        <field
+            name="description"
+        >Send access information when a Helm release is installed successfully</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hello <t
+                    t-out="doc.partner_id.firstname or doc.partner_id.name or ''"
+                />,<br /><br />
+                    Thank you for your order.<br /><br />
+                    <t t-foreach="doc.order_line" t-as="line">
+                    <t t-if="line.release_id">
+                        The service <t
+                        t-out="line.product_id.name or ''"
+                    /> is being deployed right now.<br />
+                        Check the status for the service on the <a
+                        t-attf-href="/my/releases/{{ line.release_id.id }}"
+                    >release</a> page. Once it is ready, proceed with this info:<br
+                    /><br />
+                        <t t-out="line.release_id.customer_notice or ''" />
+                        <br /><br />
+                        ---
+                        </t>
+                </t>
+                    <br /><br />
+                    If you have any problems, create a ticket on our <a
+                    href="https://erp.mint-system.ch/helpdesk"
+                >support</a> page.<br /><br />
+                    Kind regards,<br />
+                    <t t-out="doc.company_id.name or ''" />
+                </p>
+            </div>
+        </field>
+        <field name="lang">{{ doc.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True" />
+    </record>
+</odoo>

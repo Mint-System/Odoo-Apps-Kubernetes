@@ -38,7 +38,7 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         """
-        For each order line with a chart, install chart.
+        For each order line with a chart, create and install a release.
         """
         res = super().action_confirm()
         for order in self.filtered("chart_ids"):
@@ -48,21 +48,18 @@ class SaleOrder(models.Model):
             if not order.project_name:
                 raise ValidationError(_("Project name is required for Helm chart deployment."))
 
-            namespace_id = self.env["kubectl.namespace"].get_or_create(
-                {"name": order.project_name, "cluster_id": order.cluster_id.id}
-            )
             for line in order.order_line:
                 release_values = {
                     "name": line.product_id.chart_id.name,
                     "sale_line_id": line.id,
-                    "namespace_id": namespace_id.id,
-                    "cluster_id": namespace_id.cluster_id.id,
+                    "namespace": order.project_name,
+                    "create_namespace": True,
+                    "cluster_id": order.cluster_id.id,
                     "product_id": line.product_id.id,
                     "partner_id": order.partner_id.id,
                 }
                 release_id = line.product_id.chart_id.create_release(release_values)
                 line.release_id = release_id
-                release_id._compute_values()
                 release_id.action_install()
         return res
 

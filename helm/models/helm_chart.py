@@ -17,6 +17,9 @@ class HelmChart(models.Model):
     product_ids = fields.One2many("product.product", "chart_id", domain=[("type", "=", "service")])
 
     values = fields.Text(compute="_compute_values", string="Chart values.yaml")
+    customer_notice_template = fields.Text(
+        string="Customer Notice Template", help="Template for customer notice emails"
+    )
     value_ids = fields.One2many(
         "helm.chart.value",
         "chart_id",
@@ -127,3 +130,11 @@ class HelmChart(models.Model):
             "domain": [("chart_id", "=", self.id)],
             "context": {"search_default_chart_id": self.id, "default_chart_id": self.id},
         }
+
+    def get_value(self, path):
+        """
+        Returns a value from path. The release_id.chart_id.value_ids and the release_id.value_ids are checked.
+        """
+        self.ensure_one()
+        # This method will be implemented in the release model since it needs access to both chart and release values
+        return None

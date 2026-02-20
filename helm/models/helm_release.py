@@ -47,6 +47,11 @@ class HelmRelease(models.Model):
     values = fields.Text(
         compute="_compute_values", store=True, help="Values computed from the chart and the release values."
     )
+    customer_notice = fields.Text(
+        string="Customer Notice",
+        compute="_compute_customer_notice",
+        help="Computed customer notice based on chart template",
+    )
     secret_ids = fields.One2many(
         "helm.chart.secret",
         "release_id",
@@ -56,6 +61,60 @@ class HelmRelease(models.Model):
         for rec in self:
             if not rec.namespace and rec.namespace_id:
                 rec.namespace = rec.namespace_id.name
+
+    def get_value(self, path):
+        """
+        Returns a value from path. The chart_id.value_ids and the release_id.value_ids are checked.
+        """
+        self.ensure_one()
+
+        # First check release-specific values
+        for value in self.value_ids:
+            if value.path == path:
+                # Use the option value if option_id is set, otherwise use the main value
+                if value.option_id:
+                    return value.option_id.value
+                else:
+                    return value.value
+
+        # Then check chart-level values
+        for value in self.chart_id.value_ids:
+            if value.path == path:
+                try:
+                    return self._eval_value(value.value)
+                except Exception as e:
+                    _logger.error(f"Error evaluating chart value {value.value}: {str(e)}")
+                    return None
+
+        return None
+
+    def _compute_customer_notice(self):
+        """
+        Compute the customer notice based on the chart template.
+        """
+        for release in self:
+            if release.chart_id.customer_notice_template:
+                try:
+                    # Prepare rendering context
+                    render_context = {
+                        "release": release,
+                        "release_id": release,
+                    }
+
+                    # Render the template using Odoo's mail rendering mechanism
+                    rendered = self.env["mail.render.mixin"]._render_template(
+                        release.chart_id.customer_notice_template,
+                        "helm.release",
+                        [release.id],
+                        engine="inline_template",
+                        add_context=render_context,
+                    )
+                    release.customer_notice = rendered.get(release.id, "")
+                except Exception as e:
+                    _logger.error(f"Error rendering customer notice template: {str(e)}")
+                    release.customer_notice = ""
+            else:
+                release.customer_notice = ""
 
     def _compute_display_name(self):
         for rec in self:
@@ -151,30 +210,28 @@ class HelmRelease(models.Model):
         if self.chart_id.state != "added":
             raise ValidationError(_("The chart '%s' has not been added.", self.chart_id.name))
 
+        # Create namespace in Kubernetes first
+        if self.create_namespace:
+            try:
+                command = [
+                    "kubectl",
+                    "create",
+                    "namespace",
+                    self.namespace,
+                ]
+                result = self.cluster_id.context_id.run(command)
+                if not self.namespace_id:
+                    self.namespace_id = self.env["kubectl.namespace"].create(
+                        {"name": self.namespace, "cluster_id": self.cluster_id.id}
+                    )
+                _logger.info(f"Created namespace {self.namespace}")
+            except subprocess.CalledProcessError as e:
+                _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
+
+        # Create secrets before chart installation
+        self._create_secrets()
+
         try:
-            # Create namespace in Kubernetes first if needed
-            if self.create_namespace:
-                context = self.cluster_id.context_ids[0]
-                try:
-                    command = [
-                        "kubectl",
-                        "create",
-                        "namespace",
-                        self.namespace,
-                    ]
-                    result = context.run(command)
-                    if not self.namespace_id:
-                        self.namespace_id = self.env["kubectl.namespace"].create(
-                            {"name": self.namespace, "cluster_id": self.cluster_id.id}
-                        )
-                    _logger.info(f"Created namespace {self.namespace}")
-                except subprocess.CalledProcessError as e:
-                    _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
-                    raise
-
-            # Create secrets before chart installation
-            self._create_secrets()
-
             # Setup install command
             command = [
                 "helm",
@@ -204,8 +261,6 @@ class HelmRelease(models.Model):
         if not self.secret_ids or not self.namespace:
             return
 
-        context = self.cluster_id.context_ids[0]
-
         for secret in self.secret_ids:
             secret_data = ""
             for data in secret.data_ids:
@@ -232,7 +287,7 @@ class HelmRelease(models.Model):
                     self.namespace,
                     "--from-literal=" + secret_data.strip().replace("\n", " --from-literal="),
                 ]
-                result = context.run(command)
+                result = self.cluster_id.context_id.run(command)
                 _logger.info(f"Created secret {secret.name} in namespace {self.namespace}")
             except subprocess.CalledProcessError as e:
                 _logger.error(f"Failed to create secret {secret.name}: {e.stderr}")
@@ -246,8 +301,6 @@ class HelmRelease(models.Model):
         if not self.secret_ids or not self.namespace:
             return
 
-        context = self.cluster_id.context_ids[0]
-
         for secret in self.secret_ids:
             try:
                 # Delete secret using kubectl
@@ -260,7 +313,7 @@ class HelmRelease(models.Model):
                     self.namespace,
                     "--ignore-not-found=true",  # Don't fail if secret doesn't exist
                 ]
-                result = context.run(command)
+                result = self.cluster_id.context_id.run(command)
                 _logger.info(f"Deleted secret {secret.name} from namespace {self.namespace}")
             except subprocess.CalledProcessError as e:
                 _logger.error(f"Failed to delete secret {secret.name}: {e.stderr}")
@@ -277,7 +330,7 @@ class HelmRelease(models.Model):
                 self.name,
                 f"{self.chart_id.repo_id.name}/{self.chart_id.name}",
             ]
-            result = self.cluster_id.context_ids[0].run(command, self.values)
+            result = self.cluster_id.context_id.run(command, self.values)
 
             self.output = result.stdout
             return display_notification("Chart Upgraded", result.stdout, "success")
@@ -294,13 +347,12 @@ class HelmRelease(models.Model):
             # Delete secrets before uninstalling chart
             self._delete_secrets()
 
-            result = self.cluster_id.context_ids[0].run(
-                [
-                    "helm",
-                    "uninstall",
-                    self.name,
-                ]
-            )
+            command = [
+                "helm",
+                "uninstall",
+                self.name,
+            ]
+            result = self.cluster_id.context_id.run(command)
             self.write({"state": "draft"})
             self.output = result.stdout
             return display_notification("Chart Uninstalled", result.stdout, "success")

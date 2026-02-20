@@ -31,6 +31,18 @@
     <record id="chart_odoo" model="helm.chart">
         <field name="name">odoo</field>
         <field name="repo_id" ref="helm.repo_kubernetes_build" />
+        <field
+            name="customer_notice_template"
+        ><![CDATA[
+<p>
+Anleitung: <a href="https://wiki.mint-system.ch/mint-cloud-odoo-erste-schritte.html">Mint Cloud Odoo - Erste Schritte</a>
+</p>
+<ul>
+<li>Url: <a href="{{release.ingress_url}}">{{release.ingress_url}}</a></li>
+<li>Username: {{release.get_value('init.login')}}</li>
+<li>Password: {{release.get_value('init.password')}}</li>
+</ul>
+]]></field>
     </record>
 
     <record id="product_odoo_community_edition" model="product.product">
