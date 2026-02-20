@@ -3,7 +3,7 @@ from odoo import models
 
 class HelmRelease(models.Model):
     _name = "helm.release"
-    _inherit = ["helm.release", "portal.mixin"]
+    _inherit = ["helm.release", "portal.mixin", "mail.thread"]
 
     def _compute_access_url(self):
         """Override portal.mixin method to set the correct portal URL"""

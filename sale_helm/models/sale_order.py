@@ -17,10 +17,10 @@ class SaleOrder(models.Model):
     release_ids = fields.Many2many("helm.release", compute="_compute_release_ids", store=True)
     release_count = fields.Integer(string="Releases", compute="_compute_release_ids", store=True)
 
-    @api.depends("order_line.product_id", "order_line.release_id")
+    @api.depends("order_line.product_id", "order_line.release_ids")
     def _compute_release_ids(self):
         for order in self:
-            order.release_ids = order.order_line.mapped("release_id")
+            order.release_ids = order.order_line.mapped("release_ids")
             order.release_count = len(order.release_ids)
 
     def _compute_chart_ids(self):
@@ -59,23 +59,16 @@ class SaleOrder(models.Model):
                     "partner_id": order.partner_id.id,
                 }
                 release_id = line.product_id.chart_id.create_release(release_values)
-                line.release_id = release_id
                 release_id.action_install()
         return res
 
     def action_view_release(self):
         self.ensure_one()
-        view_form_id = self.env.ref("helm.helm_release_form_view").id
-        view_list_id = self.env.ref("helm.helm_release_list_view").id
-        action = {
+        return {
+            "name": "Releases",
             "type": "ir.actions.act_window",
-            "domain": [("id", "in", self.release_ids.ids)],
-            "view_mode": "tree,form",
-            "name": _("Releases"),
             "res_model": "helm.release",
+            "view_mode": "list,form",
+            "domain": [("id", "in", self.release_ids.ids)],
+            "target": "current",
         }
-        if self.release_count == 1:
-            action.update({"views": [(view_form_id, "form")], "res_id": self.release_ids.id})
-        else:
-            action["views"] = [(view_list_id, "tree"), (view_form_id, "form")]
-        return action

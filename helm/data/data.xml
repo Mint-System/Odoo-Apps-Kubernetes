@@ -35,13 +35,27 @@
             name="customer_notice_template"
         ><![CDATA[
 <p>
-Anleitung: <a href="https://wiki.mint-system.ch/mint-cloud-odoo-erste-schritte.html">Mint Cloud Odoo - Erste Schritte</a>
-</p>
+Getting started guide: <a href="https://wiki.mint-system.ch/mint-cloud-erste-schritte.html">Mint Cloud Odoo - Erste Schritte</a>
+</br>
+</br>
+Production: <a t-attf-href="https://{{ release.get_value('ingress.host') }}">staging.<t t-out="release.get_value('ingress.host')" /></a>
+<t t-if="release.get_value('ingress.customDomain')">
+Custom Domain: <a t-attf-href="https://{{ release.get_value('ingress.customDomain') }}"><t t-out="release.get_value('ingress.customDomain')" /></a>
+</br>
+</t>
+</br>
+</br>
+<t t-if="release.get_value('staging.enabled')">
+Staging: <a t-attf-href="https://staging.{{ release.get_value('ingress.host') }}">staging.<t t-out="release.get_value('ingress.host')" /></a>
+</br>
+</br>
+</t>
+Your login credentials:
 <ul>
-<li>Url: <a href="{{release.ingress_url}}">{{release.ingress_url}}</a></li>
-<li>Benutzername: {{release.get_value('init.login')}}</li>
-<li>Passwort: {{release.get_value('init.password')}}</li>
+<li>Username: <t t-out="release.get_value('init.login')" /></li>
+<li>Password: <t t-out="release.get_value('init.password')" /></li>
 </ul>
+</p>
 ]]></field>
     </record>
 

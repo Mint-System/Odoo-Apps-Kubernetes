@@ -75,9 +75,15 @@
                                             />
                                         </list>
                                     </field>
+                                    <br />
+                                    <label
+                                        for="customer_notice"
+                                        string="Customer Notice"
+                                    />
+                                    <br />
                                     <field
                                         name="customer_notice"
-                                        widget="html"
+                                        nolabel="1"
                                         readonly="1"
                                     />
                                 </group>
@@ -96,6 +102,9 @@
                                     />
                                 </group>
                             </group>
+                        </page>
+                        <page string="Chatter" name="chatter">
+                            <chatter />
                         </page>
                         <page string="Secrets" name="secrets">
                             <group>

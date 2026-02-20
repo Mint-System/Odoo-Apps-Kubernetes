@@ -225,6 +225,13 @@
                 <div class="bg-light p-3 rounded" style="white-space: pre-wrap;">
                     <t t-esc="(release.output or 'No output available').strip()" />
                 </div>
+
+                <!-- chatter -->
+                <hr />
+                <div id="release_communication">
+                    <h3>Communication history</h3>
+                    <t t-call="portal.message_thread" />
+                </div>
             </div>
         </t>
     </template>

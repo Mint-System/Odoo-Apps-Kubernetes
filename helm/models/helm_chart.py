@@ -128,7 +128,6 @@ class HelmChart(models.Model):
             "res_model": "helm.release",
             "view_mode": "list,form",
             "domain": [("chart_id", "=", self.id)],
-            "context": {"search_default_chart_id": self.id, "default_chart_id": self.id},
         }
 
     def get_value(self, path):

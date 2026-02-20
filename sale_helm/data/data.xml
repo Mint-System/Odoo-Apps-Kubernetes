@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="chart_odoo_value_ingress_custom_domain_order" model="helm.chart.value">
-        <field name="chart_id" ref="helm.chart_odoo" />
-        <field name="path">ingress.customDomain</field>
-        <field name="value">order_id.custom_domain</field>
-    </record>
-
     <record id="chart_odoo_value_init_login_order" model="helm.chart.value">
         <field name="path">init.login</field>
         <field name="value">order_id.partner_id.email</field>
+    </record>
+    <record id="chart_odoo_value_ingress_custom_domain_order" model="helm.chart.value">
+        <field name="release_chart_id" ref="helm.chart_odoo" />
+        <field name="path">ingress.customDomain</field>
+        <field name="value">order_id.custom_domain</field>
     </record>
 </odoo>

@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 class HelmRelease(models.Model):
     _name = "helm.release"
     _description = "Helm Release"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     name = fields.Char(help="Name of the release.", required=True)
     state = fields.Selection(
@@ -37,6 +38,7 @@ class HelmRelease(models.Model):
     )
     product_id = fields.Many2one("product.product", required=True)
     partner_id = fields.Many2one("res.partner", string="Customer", required=True)
+    sale_line_id = fields.Many2one("sale.order.line", string="Sale Order Line")
 
     value_ids = fields.One2many(
         "helm.chart.value",
@@ -106,7 +108,7 @@ class HelmRelease(models.Model):
                         release.chart_id.customer_notice_template,
                         "helm.release",
                         [release.id],
-                        engine="inline_template",
+                        engine="qweb",
                         add_context=render_context,
                     )
                     release.customer_notice = rendered.get(release.id, "")

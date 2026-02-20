@@ -26,7 +26,6 @@
                             name="action_view_releases"
                             type="object"
                             icon="fa-list"
-                            context="{'search_default_chart_id': id, 'default_chart_id': id}"
                         />
                     </div>
                     <group>

@@ -19,7 +19,7 @@
                     Hello <t t-out="object.partner_id.name or ''" />,<br /><br />
                     Thank you for your order.<br /><br />
                     <t t-foreach="object.order_line" t-as="line">
-                    <t t-if="line.release_id">
+                    <t t-if="line.release_id" t-set="Markup" t-value="Markup">
                         The service <t
                         t-out="line.product_id.name or ''"
                     /> is being deployed right now.<br />
@@ -27,7 +27,7 @@
                         t-attf-href="/my/releases/{{ line.release_id.id }}"
                     >release</a> page. Once it is ready, proceed with this info:<br
                     /><br />
-                        <t t-raw="line.release_id.customer_notice or ''" />
+                        <t t-out="Markup(line.release_id.customer_notice or '')" />
                         <br />
                         ---
                         </t>
