@@ -14,23 +14,24 @@
             name="description"
         >Send access information when a Helm release is installed successfully</field>
         <field name="body_html" type="html">
-            <div style="margin: 0px; padding: 0px;">
-                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+            <div>
+                <p>
                     Hello <t t-out="object.partner_id.name or ''" />,<br /><br />
                     Thank you for your order.<br /><br />
                     <t t-foreach="object.order_line" t-as="line">
-                    <t t-if="line.release_id" t-set="Markup" t-value="Markup">
                         The service <t
-                        t-out="line.product_id.name or ''"
-                    /> is being deployed right now.<br />
+                    t-out="line.product_id.name or ''"
+                /> is being deployed right now.<br />
                         Check the status for the service on the <a
-                        t-attf-href="/my/releases/{{ line.release_id.id }}"
-                    >release</a> page. Once it is ready, proceed with this info:<br
-                    /><br />
-                        <t t-out="Markup(line.release_id.customer_notice or '')" />
+                    t-attf-href="/my/releases/{{ line.release_ids.id }}"
+                >release</a> page. Once it is ready, proceed with this info:<br />
+                        <p
+                    style="white-space: pre-wrap;"
+                    t-out="line.release_ids.customer_notice or ''"
+                />
                         <br />
                         ---
-                        </t>
+
                 </t>
                     <br /><br />
                     If you have any problems, create a ticket on our <a

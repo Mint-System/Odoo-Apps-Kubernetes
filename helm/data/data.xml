@@ -34,28 +34,22 @@
         <field
             name="customer_notice_template"
         ><![CDATA[
-<p>
-Getting started guide: <a href="https://wiki.mint-system.ch/mint-cloud-erste-schritte.html">Mint Cloud Odoo - Erste Schritte</a>
+Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.html
 </br>
+Your environments:
 </br>
-Production: <a t-attf-href="https://{{ release.get_value('ingress.host') }}">staging.<t t-out="release.get_value('ingress.host')" /></a>
-<t t-if="release.get_value('ingress.customDomain')">
-Custom Domain: <a t-attf-href="https://{{ release.get_value('ingress.customDomain') }}"><t t-out="release.get_value('ingress.customDomain')" /></a>
-</br>
+Production: https://<t t-out="release.get_value('ingress.host')" />
+<t t-if="release.get_value('ingress.customDomain') != 'False'">
+Custom Domain: https://<t t-out="release.get_value('ingress.customDomain')" />
 </t>
-</br>
-</br>
 <t t-if="release.get_value('staging.enabled')">
-Staging: <a t-attf-href="https://staging.{{ release.get_value('ingress.host') }}">staging.<t t-out="release.get_value('ingress.host')" /></a>
-</br>
-</br>
+Staging: https://staging.<t t-out="release.get_value('ingress.host')" />
 </t>
+</br>
 Your login credentials:
-<ul>
-<li>Username: <t t-out="release.get_value('init.login')" /></li>
-<li>Password: <t t-out="release.get_value('init.password')" /></li>
-</ul>
-</p>
+</br>
+Username: <t t-out="release.get_value('init.login')" />
+Password: <t t-out="release.get_value('init.password')" />
 ]]></field>
     </record>
 
