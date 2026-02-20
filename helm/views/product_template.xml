@@ -12,6 +12,11 @@
                             <field name="chart_id" />
                         </group>
                     </group>
+                    <group string="Consulting Partners">
+                        <field name="partner_ids" nolabel="1">
+                            <list />
+                        </field>
+                    </group>
                 </page>
             </notebook>
         </field>
