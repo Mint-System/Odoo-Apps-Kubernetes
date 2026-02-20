@@ -24,6 +24,7 @@ class HelmChartValue(models.Model):
     option_id = fields.Many2one(
         "helm.chart.value.option", domain="[('path', '=', path)]", help="Select value from options."
     )
+    readonly = fields.Boolean(help="If checked, this value cannot be modified in the portal.")
 
     def _compute_display_name(self):
         for rec in self:

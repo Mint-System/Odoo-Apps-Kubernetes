@@ -54,37 +54,50 @@ class CustomerPortal(portal.CustomerPortal):
         )
         return request.render("helm_portal.portal_my_releases", values)
 
-    @http.route(["/my/release/<int:release_id>"], type="http", auth="public", website=True)
-    def portal_my_release(self, release_id=None, access_token=None, **kw):
+    @http.route(["/my/release/<int:release_id>"], type="http", auth="public", website=True, methods=["GET"])
+    def portal_my_release_get(self, release_id=None, access_token=None, **kw):
         try:
             release_sudo = self._document_check_access("helm.release", release_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect("/my")
 
-        # Handle update action
-        if kw.get("update") == "True":
-            # Update values from form
-            for value in release_sudo.value_ids:
-                form_value = kw.get(f"value_{value.id}")
-                if form_value is not None:
-                    value.value = form_value
-
-            # Trigger upgrade action
-            result = release_sudo.action_upgrade()
-
-            # Refresh the release data
-            release_sudo.refresh()
-
-            # Add notification message
-            values = self._get_page_view_values(release_sudo, access_token, {}, False, False, **kw)
-            values["release"] = release_sudo
-            values["notification"] = {
-                "message": "Release updated successfully",
-                "type": "success",
-                "output": release_sudo.output or "",
-            }
-            return request.render("helm_portal.portal_my_release", values)
-
-        values = self._get_page_view_values(release_sudo, access_token, {}, False, False, **kw)
+        values = self._get_page_view_values(release_sudo, access_token, {}, False, False)
         values["release"] = release_sudo
+
+        # Check for notification in session
+        if "notification" in request.session:
+            values["notification"] = request.session.pop("notification")
+
         return request.render("helm_portal.portal_my_release", values)
+
+    @http.route(["/my/release/<int:release_id>"], type="http", auth="public", website=True, methods=["POST"])
+    def portal_my_release_post(self, release_id=None, access_token=None, **kw):
+        try:
+            release_sudo = self._document_check_access("helm.release", release_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect("/my")
+
+        # Update values from form
+        for value in release_sudo.value_ids:
+            # Skip readonly values
+            if value.readonly:
+                continue
+            form_value = kw.get(f"value_{value.id}")
+            if form_value is not None:
+                value.value = form_value
+
+        # Trigger upgrade action
+        result = release_sudo.action_upgrade()
+
+        # Store notification in session
+        notification = {
+            "message": "Release updated successfully",
+            "type": "success",
+        }
+        request.session["notification"] = notification
+
+        # Redirect to the GET endpoint
+        redirect_url = f"/my/release/{release_id}"
+        if access_token:
+            redirect_url += f"?access_token={access_token}"
+        return request.redirect(redirect_url)

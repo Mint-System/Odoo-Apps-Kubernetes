@@ -63,6 +63,7 @@
                 <thead>
                     <tr class="active">
                         <th>Name</th>
+                        <th>Product</th>
                         <th>Link</th>
                         <th>State</th>
                     </tr>
@@ -73,6 +74,9 @@
                             <a t-att-href="release.get_portal_url()">
                                 <t t-esc="release.name" />
                             </a>
+                        </td>
+                        <td>
+                            <t t-esc="release.product_id.name" />
                         </td>
                         <td>
                             <t t-if="release.ingress_url">
@@ -105,14 +109,6 @@
                         role="alert"
                     >
                         <t t-esc="notification['message']" />
-                        <t t-if="notification['output']">
-                            <div class="mt-2">
-                                <strong>Output:</strong>
-                                <pre>
-                                    <t t-esc="notification['output']" />
-                                </pre>
-                            </div>
-                        </t>
                     </div>
                 </t>
 
@@ -120,7 +116,7 @@
                     <t t-esc="release.name" />
                 </h1>
 
-                <div class="mb-3">
+                <p>
                     <strong>Link:</strong>
                     <t t-if="release.ingress_url">
                         <a t-att-href="release.ingress_url" target="_blank">
@@ -130,38 +126,61 @@
                     <t t-else="">
                         Not available
                     </t>
-                </div>
-
-                <div class="mb-3">
+                    <br />
                     <strong>State:</strong>
                     <t t-esc="release.state" />
-                </div>
+                    <br />
+                    <strong>Product:</strong>
+                    <t t-esc="release.product_id.name" />
+                    <br />
+                    <strong>Namespace:</strong>
+                    <t
+                        t-esc="release.namespace or release.namespace_id.name or 'Not specified'"
+                    />
+                </p>
 
                 <h3>Release Configuration</h3>
-                <form
-                    method="post"
-                    t-att-action="release.get_portal_url(update='True')"
-                >
-                    <input type="hidden" name="update" value="True" />
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Path</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="release.value_ids" t-as="value">
-                                <tr>
-                                    <td>
-                                        <t t-esc="value.path" />
-                                    </td>
-                                    <td>
-                                        <t t-if="value.option_id">
-                                            <select
-                                                name="value_"
+                <form method="post" t-att-action="release.get_portal_url()">
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        t-att-value="request.csrf_token()"
+                    />
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <t t-foreach="release.value_ids" t-as="value">
+                            <div
+                                t-attf-class="s_website_form_field mb-3 col-12 #{'s_website_form_required' if not value.readonly else ''}"
+                                t-att-data-name="'Field_' + str(value.id)"
+                            >
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label
+                                        t-attf-class="col-form-label col-sm-auto s_website_form_label"
+                                        style="width: 200px"
+                                        t-att-for="'value_' + str(value.id)"
+                                    >
+                                        <span class="s_website_form_label_content">
+                                            <t t-esc="value.path" />
+                                        </span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <t t-if="value.readonly">
+                                            <input
+                                                type="text"
+                                                class="form-control s_website_form_input"
+                                                t-att-value="value.value or ''"
+                                                readonly="readonly"
+                                            />
+                                            <input
+                                                type="hidden"
                                                 t-att-name="'value_' + str(value.id)"
-                                                class="form-control"
+                                                t-att-value="value.value or ''"
+                                            />
+                                        </t>
+                                        <t t-elif="value.option_id">
+                                            <select
+                                                t-att-name="'value_' + str(value.id)"
+                                                t-att-id="'value_' + str(value.id)"
+                                                class="form-control s_website_form_input"
                                             >
                                                 <t
                                                     t-foreach="value.option_id.search([('path', '=', value.path)])"
@@ -179,27 +198,33 @@
                                         <t t-else="">
                                             <input
                                                 type="text"
-                                                name="value_"
                                                 t-att-name="'value_' + str(value.id)"
-                                                class="form-control"
+                                                t-att-id="'value_' + str(value.id)"
+                                                class="form-control s_website_form_input"
                                                 t-att-value="value.value or ''"
                                             />
                                         </t>
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >Update Release</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <div
+                            class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label"
+                        >
+                            <div style="width: 200px;" class="s_website_form_label" />
+                            <button
+                                type="submit"
+                                class="btn btn-primary s_website_form_send"
+                            >Update Release</button>
+                        </div>
+                    </div>
                 </form>
 
                 <h3 class="mt-4">Last Output:</h3>
-                <pre class="bg-light p-3 rounded">
-                    <t t-esc="release.output or 'No output available'" />
-                </pre>
+                <div class="bg-light p-3 rounded" style="white-space: pre-wrap;">
+                    <t t-esc="(release.output or 'No output available').strip()" />
+                </div>
             </div>
         </t>
     </template>

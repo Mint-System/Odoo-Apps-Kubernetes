@@ -75,6 +75,7 @@
         <field name="path">init.password</field>
         <field name="value">generate_password()</field>
         <field name="release_chart_id" eval="chart_odoo" />
+        <field name="readonly" eval="True" />
     </record>
 
     <record id="chart_odoo_value_image_option1" model="helm.chart.value.option">

@@ -28,6 +28,7 @@
                             <field name="path" />
                             <field name="value" />
                             <field name="option_id" context="{'default_path': path}" />
+                            <field name="readonly" />
                         </group>
                         <group>
                             <field name="chart_id" readonly="True" />
