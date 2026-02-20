@@ -30,8 +30,8 @@
                         <page string="General Information" name="general_info">
                             <group>
                                 <group>
-                                <field name="server" />
-                                <field name="partner_id" />
+                                    <field name="server" />
+                                    <field name="partner_id" />
                                 </group>
                                 <group>
                                     <field name="domain" />

@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <page name="kubernetes" position="replace">
                 <page string="Kubernetes" name="kubernetes">
-                    <group>
-                        <group>
-                            <field name="is_provider" />
-                        </group>
+                    <group string="Clusters">
+                        <field name="cluster_ids" nolabel="1">
+                            <list />
+                        </field>
                     </group>
                     <group string="Consulting Products">
                         <field name="helm_product_ids" nolabel="1">

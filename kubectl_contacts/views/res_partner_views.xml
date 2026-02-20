@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">kubectl_contacts.view_res_partner_filter</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator[last()]" position="after">
+                <separator />
+                <filter
+                    string="Cluster Provider"
+                    name="cluster_provider"
+                    domain="[('cluster_ids', '!=', False)]"
+                />
+                <filter
+                    string="Consulting Partner"
+                    name="consulting_partner"
+                    domain="[('helm_product_ids', '!=', False)]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
