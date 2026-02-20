@@ -39,8 +39,8 @@ Anleitung: <a href="https://wiki.mint-system.ch/mint-cloud-odoo-erste-schritte.h
 </p>
 <ul>
 <li>Url: <a href="{{release.ingress_url}}">{{release.ingress_url}}</a></li>
-<li>Username: {{release.get_value('init.login')}}</li>
-<li>Password: {{release.get_value('init.password')}}</li>
+<li>Benutzername: {{release.get_value('init.login')}}</li>
+<li>Passwort: {{release.get_value('init.password')}}</li>
 </ul>
 ]]></field>
     </record>

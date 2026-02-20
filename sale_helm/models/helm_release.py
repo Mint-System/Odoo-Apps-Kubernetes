@@ -51,3 +51,18 @@ class HelmRelease(models.Model):
                     _logger.error(f"Failed to send release notification email: {str(e)}")
 
         return result
+
+    def action_view_sale_order(self):
+        """
+        Open the sale order linked to this release.
+        """
+        self.ensure_one()
+        if self.sale_line_id and self.sale_line_id.order_id:
+            return {
+                "name": "Sale Order",
+                "type": "ir.actions.act_window",
+                "res_model": "sale.order",
+                "view_mode": "form",
+                "res_id": self.sale_line_id.order_id.id,
+                "target": "current",
+            }

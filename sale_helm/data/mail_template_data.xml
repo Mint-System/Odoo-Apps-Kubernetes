@@ -5,22 +5,20 @@
         <field name="model_id" ref="sale.model_sale_order" />
         <field
             name="subject"
-        >{{ doc.order_line[0].product_id.name }} - Access Information</field>
+        >{{ object.order_line[0].product_id.name }} - Access Information</field>
         <field
             name="email_from"
-        >{{ (doc.user_id.email_formatted or doc.company_id.email or user.email_formatted) }}</field>
-        <field name="email_to">{{ doc.partner_id.email_formatted }}</field>
+        >{{ (object.user_id.email_formatted or object.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email_formatted }}</field>
         <field
             name="description"
         >Send access information when a Helm release is installed successfully</field>
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
                 <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                    Hello <t
-                    t-out="doc.partner_id.firstname or doc.partner_id.name or ''"
-                />,<br /><br />
+                    Hello <t t-out="object.partner_id.name or ''" />,<br /><br />
                     Thank you for your order.<br /><br />
-                    <t t-foreach="doc.order_line" t-as="line">
+                    <t t-foreach="object.order_line" t-as="line">
                     <t t-if="line.release_id">
                         The service <t
                         t-out="line.product_id.name or ''"
@@ -29,8 +27,8 @@
                         t-attf-href="/my/releases/{{ line.release_id.id }}"
                     >release</a> page. Once it is ready, proceed with this info:<br
                     /><br />
-                        <t t-out="line.release_id.customer_notice or ''" />
-                        <br /><br />
+                        <t t-raw="line.release_id.customer_notice or ''" />
+                        <br />
                         ---
                         </t>
                 </t>
@@ -39,11 +37,11 @@
                     href="https://erp.mint-system.ch/helpdesk"
                 >support</a> page.<br /><br />
                     Kind regards,<br />
-                    <t t-out="doc.company_id.name or ''" />
+                    <t t-out="object.company_id.name or ''" />
                 </p>
             </div>
         </field>
-        <field name="lang">{{ doc.partner_id.lang }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="True" />
     </record>
 </odoo>
