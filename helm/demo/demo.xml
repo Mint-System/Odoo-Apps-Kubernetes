@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="product_template_odoo_community_edition_demo" model="product.template">
-        <field name="name">Odoo Community Edition</field>
-        <field name="type">service</field>
-        <field name="list_price">50</field>
-        <field name="chart_id" ref="helm.chart_odoo" />
-    </record>
-
-    <record id="product_template_odoo_enterprise_edition_demo" model="product.template">
-        <field name="name">Odoo Enterprise Edition</field>
-        <field name="type">service</field>
-        <field name="list_price">80</field>
-        <field name="chart_id" ref="helm.chart_odoo" />
-    </record>
 
     <record id="res_partner_mint_system_demo" model="res.partner">
         <field name="name">Mint System GmbH</field>
         <field name="email">login@mint-system.ch</field>
         <field
             name="helm_product_ids"
-            eval="[(4, ref('product_template_odoo_community_edition_demo')),(4, ref('product_template_odoo_enterprise_edition_demo'))]"
+            eval="[(4, ref('product_odoo_community_edition')),(4, ref('product_odoo_enterprise_edition'))]"
         />
     </record>
 

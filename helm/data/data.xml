@@ -53,17 +53,17 @@ Password: <t t-out="release.get_value('init.password')" />
 ]]></field>
     </record>
 
-    <record id="product_odoo_community_edition" model="product.product">
+    <record id="product_odoo_community_edition" model="product.template">
         <field name="name">Odoo Community Edition</field>
         <field name="type">service</field>
         <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
     </record>
 
-    <record id="product_odoo_enterprise_edition" model="product.product">
+    <record id="product_odoo_enterprise_edition" model="product.template">
         <field name="name">Odoo Enterprise Edition</field>
         <field name="type">service</field>
-        <field name="list_price">80</field>
+        <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
     </record>
 
@@ -123,9 +123,9 @@ Password: <t t-out="release.get_value('init.password')" />
         <field name="chart_id" ref="helm.chart_odoo" />
         <field name="path">downloadOdooEnterprise</field>
         <field name="value">True</field>
-        <field
+<!--         <field
             name="filter_product_ids"
             eval="[(4, ref('product_odoo_enterprise_edition'))]"
-        />
+        /> -->
     </record>
 </odoo>
