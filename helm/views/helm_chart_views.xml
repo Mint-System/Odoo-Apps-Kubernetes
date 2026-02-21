@@ -53,6 +53,29 @@
                         <strong
                             >Note:</strong> These values will be computed and applied to the release values.
                     </p>
+                            <group string="Updateable values">
+                                <field
+                                    name="release_value_ids"
+                                    nolabel="1"
+                                    context="{'default_release_chart_id': id}"
+                                >
+                                    <list>
+                                        <field name="filter_cluster_ids" />
+                                        <field name="filter_product_ids" />
+                                        <field name="path" />
+                                        <field name="value" />
+                                        <field
+                                            name="option_id"
+                                            context="{'default_value_id': id}"
+                                        />
+                                    </list>
+                                </field>
+                            </group>
+                            <p class="oe_grey oe_edit_only">
+                        <strong
+                            >Note:</strong> These values will be copied to the release and can be updated.
+                    </p>
+
                             <group>
                                 <group string="Chart values.yaml">
                                     <field
@@ -61,27 +84,7 @@
                                         class="terminal-screen"
                                     />
                                 </group>
-                                <group string="Updateable values">
-                                    <field
-                                        name="release_value_ids"
-                                        nolabel="1"
-                                        context="{'default_release_chart_id': id}"
-                                    >
-                                        <list>
-                                            <field name="path" />
-                                            <field name="value" />
-                                            <field
-                                                name="option_id"
-                                                context="{'default_value_id': id}"
-                                            />
-                                        </list>
-                                    </field>
-                                    <br />
-                                    <p class="oe_grey oe_edit_only">
-                        <strong
-                                    >Note:</strong> These values will be copied to the release and can be updated.
-                    </p>
-                                    <br />
+                                <group>
                                     <label
                                         for="customer_notice_template"
                                         string="Customer Notice Template"

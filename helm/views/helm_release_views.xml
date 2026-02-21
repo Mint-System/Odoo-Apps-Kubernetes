@@ -60,22 +60,7 @@
                                     <field name="partner_id" />
                                     <field name="ingress_url" widget="url" />
                                 </group>
-                                <group string="Updatable values">
-                                    <field
-                                        name="value_ids"
-                                        nolabel="1"
-                                        context="{'default_release_id': id}"
-                                    >
-                                        <list>
-                                            <field name="path" />
-                                            <field name="value" />
-                                            <field
-                                                name="option_id"
-                                                context="{'default_value_id': id}"
-                                            />
-                                        </list>
-                                    </field>
-                                    <br />
+                                <group>
                                     <label
                                         for="customer_notice"
                                         string="Customer Notice"
@@ -103,8 +88,25 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Chatter" name="chatter">
-                            <chatter />
+                        <page string="Values" name="values">
+                            <group string="Updatable values">
+                                <field
+                                    name="value_ids"
+                                    nolabel="1"
+                                    context="{'default_release_id': id}"
+                                >
+                                    <list>
+                                        <field name="filter_cluster_ids" />
+                                        <field name="filter_product_ids" />
+                                        <field name="path" />
+                                        <field name="value" />
+                                        <field
+                                            name="option_id"
+                                            context="{'default_value_id': id}"
+                                        />
+                                    </list>
+                                </field>
+                            </group>
                         </page>
                         <page string="Secrets" name="secrets">
                             <group>
