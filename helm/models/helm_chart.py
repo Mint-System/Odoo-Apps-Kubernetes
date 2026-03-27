@@ -113,7 +113,7 @@ class HelmChart(models.Model):
             "context": {
                 "default_name": self.name,
                 "default_chart_id": self.id,
-                "default_product_id": self.product_ids[0].id,
+                "default_product_id": self.product_ids[0].product_variant_id.id,
             },
         }
 

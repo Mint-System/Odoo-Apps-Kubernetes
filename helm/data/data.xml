@@ -53,18 +53,35 @@ Password: <t t-out="release.get_value('init.password')" />
 ]]></field>
     </record>
 
-    <record id="product_odoo_community_edition" model="product.template">
+    <record id="chart_nextcloud" model="helm.chart">
+        <field name="name">nextcloud</field>
+        <field name="repo_id" ref="helm.repo_kubernetes_build" />
+        <field
+            name="customer_notice_template"
+        ><![CDATA[
+Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.html
+]]></field>
+    </record>
+
+    <record id="product_odoo_community_edition" model="product.product">
         <field name="name">Odoo Community Edition</field>
         <field name="type">service</field>
         <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
     </record>
 
-    <record id="product_odoo_enterprise_edition" model="product.template">
+    <record id="product_odoo_enterprise_edition" model="product.product">
         <field name="name">Odoo Enterprise Edition</field>
         <field name="type">service</field>
         <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
+    </record>
+
+    <record id="product_nextcloud" model="product.product">
+        <field name="name">Nextcloud</field>
+        <field name="type">service</field>
+        <field name="list_price">20</field>
+        <field name="chart_id" ref="helm.chart_nextcloud" />
     </record>
 
     <record id="chart_odoo_value_ingress_host" model="helm.chart.value">
@@ -123,9 +140,15 @@ Password: <t t-out="release.get_value('init.password')" />
         <field name="chart_id" ref="helm.chart_odoo" />
         <field name="path">downloadOdooEnterprise</field>
         <field name="value">True</field>
-<!--         <field
+        <!--         <field
             name="filter_product_ids"
             eval="[(4, ref('product_odoo_enterprise_edition'))]"
         /> -->
+    </record>
+
+    <record id="chart_nextcloud_value_nextcloud_host" model="helm.chart.value">
+        <field name="chart_id" ref="helm.chart_nextcloud" />
+        <field name="path">nextcloud.host</field>
+        <field name="value">release.namespace + '.' + release.cluster_id.domain</field>
     </record>
 </odoo>
