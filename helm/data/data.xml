@@ -117,17 +117,27 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
 
     <record id="chart_odoo_value_image_option1" model="helm.chart.value.option">
         <field name="path">image</field>
-        <field name="value">mintsystem/odoo:18.0.20251222</field>
+        <field name="value">mintsystem/odoo:18.0.20260119</field>
     </record>
 
     <record id="chart_odoo_value_image_option2" model="helm.chart.value.option">
         <field name="path">image</field>
-        <field name="value">mintsystem/odoo:18.0.20260119</field>
+        <field name="value">mintsystem/odoo:18.0.20260209</field>
     </record>
 
     <record id="chart_odoo_value_image_option3" model="helm.chart.value.option">
         <field name="path">image</field>
-        <field name="value">mintsystem/odoo:18.0.20260209</field>
+        <field name="value">mintsystem/odoo:18.0.20260217</field>
+    </record>
+
+    <record id="chart_odoo_value_image_option4" model="helm.chart.value.option">
+        <field name="path">image</field>
+        <field name="value">mintsystem/odoo:18.0.20260305</field>
+    </record>
+
+    <record id="chart_odoo_value_image_option5" model="helm.chart.value.option">
+        <field name="path">image</field>
+        <field name="value">mintsystem/odoo:18.0.20260409</field>
     </record>
 
     <record id="chart_odoo_value_image" model="helm.chart.value">
