@@ -15,7 +15,11 @@
                             invisible="create_namespace == False or namespace_id"
                             required="True"
                         />
-                        <field name="namespace_id" invisible="create_namespace" />
+                        <field
+                            name="namespace_id"
+                            invisible="create_namespace"
+                            domain="[('cluster_id','=',cluster_id)]"
+                        />
                         <field name="product_id" />
                         <field name="partner_id" />
                     </group>

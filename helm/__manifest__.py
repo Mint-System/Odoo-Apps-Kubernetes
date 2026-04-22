@@ -11,6 +11,8 @@
     "depends": ["contacts", "product", "kubectl"],
     "data": [
         "data/data.xml",
+        "data/helm_chart_nextcloud_data.xml",
+        "data/helm_chart_odoo_data.xml",
         "views/helm_repo_views.xml",
         "views/product_template.xml",
         "views/helm_release_views.xml",

@@ -35,6 +35,5 @@ class KubectlCluster(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "kubectl.context",
             "view_mode": "list,form",
-            "domain": [("id", "in", self.context_ids.ids)],
             "target": "current",
         }

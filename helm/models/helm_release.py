@@ -61,7 +61,7 @@ class HelmRelease(models.Model):
 
     def _inverse_namespace_id(self):
         for rec in self:
-            if not rec.namespace and rec.namespace_id:
+            if rec.namespace_id:
                 rec.namespace = rec.namespace_id.name
 
     def get_value(self, path):
@@ -139,7 +139,7 @@ class HelmRelease(models.Model):
         context = {"self": self, "release": self, "release_id": self, "generate_password": self.generate_password}
         return safe_eval(expression, context)
 
-    @api.depends("chart_id", "chart_id.value_ids", "state", "product_id", "partner_id")
+    @api.depends("chart_id", "value_ids", "chart_id.value_ids", "state", "product_id", "partner_id")
     def _compute_values(self):
         """
         Evaluate custom values of the chart.
@@ -226,12 +226,14 @@ class HelmRelease(models.Model):
                     self.namespace_id = self.env["kubectl.namespace"].create(
                         {"name": self.namespace, "cluster_id": self.cluster_id.id}
                     )
+                    self.create_namespace = False
                 _logger.info(f"Created namespace {self.namespace}")
             except subprocess.CalledProcessError as e:
                 _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
 
         # Create secrets before chart installation
-        self._create_secrets()
+        # FIXME: Check if secrets already exist
+        # self._create_secrets()
 
         try:
             # Setup install command

@@ -13,7 +13,7 @@
                             type="object"
                             class="btn-primary"
                             icon="fa-list"
-                            context="{'search_default_cluster_id': [('id', 'in', context_ids)]}"
+                            context="{'search_default_cluster_id': id}"
                         />
                     </div>
                     <div class="oe_title">

@@ -20,7 +20,7 @@ class HelmChartValue(models.Model):
     path = fields.Char(help="Path to the nested key of the values.yaml.", required=True)
     value = fields.Char(help="Enter python code to define the value.")
     option_id = fields.Many2one(
-        "helm.chart.value.option", domain="[('path', '=', path)]", help="Select value from options."
+        "helm.chart.value.option", domain="[('value_ids', 'in', id)]", help="Select value from options."
     )
     readonly = fields.Boolean(help="If checked, this value cannot be modified in the portal.")
 
@@ -30,7 +30,8 @@ class HelmChartValue(models.Model):
 
     def copy(self, default=None):
         """
-        Copy a chart value, evaluating expressions when copying to a release.
+        Evaluating expressions when copying values to a release.
+        If value has option then link available options.
         """
         if default is None:
             default = {}
@@ -56,16 +57,8 @@ class HelmChartValueOption(models.Model):
     _description = "Helm Chart Value Option"
     _rec_name = "value"
 
-    path = fields.Char(string="Path", required=True, index=True)
     value = fields.Char(required=True)
-
-    _sql_constraints = [
-        (
-            "unique_value_by_path",
-            "UNIQUE(value, path)",
-            "Value option must be unique per path.",
-        ),
-    ]
+    value_ids = fields.Many2many("helm.chart.value", required=True, help="Options is available in these values.")
 
     def _compute_display_name(self):
         for rec in self:

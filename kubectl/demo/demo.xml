@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="res_partner_vshn_demo" model="res.partner">
-        <field name="name">VSHN AG</field>
-        <field name="email">info@vshn.ch</field>
-        <field name="website">https://www.vshn.ch</field>
-        <field name="phone">+41 44 500 86 00</field>
-        <field name="street">Neugasse 10</field>
-        <field name="city">Zürich</field>
-        <field name="zip">8005</field>
-        <field name="country_id" ref="base.ch" />
-    </record>
-
     <record id="res_partner_localhost_demo" model="res.partner">
         <field name="name">Localhost Development</field>
         <field name="email">dev@localhost.test</field>
@@ -21,7 +10,6 @@
         <field name="zip">1234</field>
         <field name="country_id" ref="base.ch" />
     </record>
-
     <record id="kubectl_cluster_kind_demo" model="kubectl.cluster">
         <field name="name">Kind</field>
         <field name="alias">loc</field>
@@ -29,36 +17,16 @@
         <field name="domain">knd.local</field>
         <field name="partner_id" ref="kubectl.res_partner_localhost_demo" />
     </record>
-
-    <record id="kubectl_cluster_axo_demo" model="kubectl.cluster">
-        <field name="name">APPUiO</field>
-        <field name="server">https://api.exoscale-ch-gva-2-0.appuio.cloud:6443</field>
-        <field name="alias">axo</field>
-        <field name="domain">axo.mintcloud.ch</field>
-        <field name="partner_id" ref="kubectl.res_partner_vshn_demo" />
-    </record>
-
     <record id="kubectl_namespace_default_demo" model="kubectl.namespace">
         <field name="name">default</field>
         <field name="cluster_id" ref="kubectl_cluster_kind_demo" />
     </record>
-
     <record id="kubectl_context_kind_demo" model="kubectl.context">
         <field name="name">Admin</field>
         <field name="cluster_id" ref="kubectl_cluster_kind_demo" />
     </record>
-
-    <record id="kubectl_context_axo_demo" model="kubectl.context">
-        <field name="name">Admin</field>
-        <field name="cluster_id" ref="kubectl_cluster_axo_demo" />
-    </record>
-
     <record id="kubectl_cluster_kind_demo" model="kubectl.cluster">
         <field name="context_id" ref="kubectl.kubectl_context_kind_demo" />
-    </record>
-
-    <record id="kubectl_cluster_axo_demo" model="kubectl.cluster">
-        <field name="context_id" ref="kubectl.kubectl_context_axo_demo" />
     </record>
 
     <record id="base.user_admin" model="res.users">

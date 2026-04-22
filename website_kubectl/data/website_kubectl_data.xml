@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- Menu items for website -->
     <record id="menu_clusters" model="website.menu">
         <field name="name">Clusters</field>
         <field name="url">/clusters</field>
         <field name="parent_id" ref="website.main_menu" />
         <field name="sequence" type="int">50</field>
     </record>
-
     <record id="menu_partners" model="website.menu">
         <field name="name">Partners</field>
         <field name="url">/partners</field>
         <field name="parent_id" ref="website.main_menu" />
         <field name="sequence" type="int">55</field>
+    </record>
+
+    <record id="kubectl.kubectl_cluster_axo" model="kubectl.cluster">
+        <!-- <field name="website_published" eval="True" /> -->
+        <field
+            name="website_short_description"
+        >Managed Kubernetes platform by VSHN</field>
+        <field name="website_description" type="html">
+            <div class="text-muted">
+                <p
+                >APPUiO is a managed Kubernetes platform provided by VSHN, offering enterprise-grade container orchestration.</p>
+                <p
+                >This production-ready cluster includes advanced features like automated scaling, monitoring, and security.</p>
+            </div>
+        </field>
     </record>
 </odoo>

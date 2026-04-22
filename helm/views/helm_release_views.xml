@@ -54,6 +54,7 @@
                                     />
                                     <field
                                         name="namespace_id"
+                                        context="{'default_cluster_id': cluster_id}"
                                         readonly="state == 'installed'"
                                     />
                                     <field name="product_id" />

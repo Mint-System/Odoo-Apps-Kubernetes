@@ -10,7 +10,7 @@ class KubectlNamespace(models.Model):
     _description = "Kubectl Namespace"
     _resource = "namespace"
 
-    display_name = fields.Char(compute="_compute_display_name")
+    display_name = fields.Char(compute="_compute_display_name", store=True)
 
     name = fields.Char(required=True)
 
@@ -37,6 +37,7 @@ class KubectlNamespace(models.Model):
         else:
             return self.create(values)
 
+    @api.depends("name", "cluster_id")
     def _compute_display_name(self):
         for rec in self:
             rec.display_name = f"{rec.name} ({rec.cluster_id.name})"
