@@ -28,6 +28,5 @@
     "application": False,
     "auto_install": False,
     "images": ["images/screen.png"],
-    "demo": ["demo/demo.xml"],
     "external_dependencies": {"bin": ["helm"]},
 }

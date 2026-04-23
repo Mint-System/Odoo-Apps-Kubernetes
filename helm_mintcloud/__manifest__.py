@@ -1,14 +1,14 @@
 {
-    "name": "Website Kubectl mintcloud",
+    "name": "Helm mintcloud",
     "summary": """
-        Mint Cloud website data.
+        Mint Cloud helm data.
     """,
     "author": "Mint System GmbH",
     "website": "https://www.mint-system.ch/",
     "category": "Repository",
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
-    "depends": ["kubectl_mintcloud", "website_kubectl"],
+    "depends": ["helm", "kubectl_mintcloud"],
     "data": [
         "data/data.xml",
     ],
@@ -16,4 +16,5 @@
     "application": False,
     "auto_install": False,
     "images": ["images/screen.png"],
+    "external_dependencies": {"bin": ["helm"]},
 }

@@ -71,7 +71,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="attribute_id" ref="product_attribute_version" />
         <field
             name="value_ids"
-            eval="[(6,0,[ref('product_attribute_version_17_0'), ref('product_attribute_version_18_0'), ref('product_attribute_version_19_0')])]"
+            eval="[(4,ref('product_attribute_version_17_0'), ref('product_attribute_version_18_0'), ref('product_attribute_version_19_0'))]"
         />
     </record>
     <record id="product_odoo_enterprise_edition" model="product.product">
@@ -79,6 +79,20 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="type">service</field>
         <field name="list_price">50</field>
         <field name="chart_id" ref="helm.chart_odoo" />
+    </record>
+    <record
+        id="product_odoo_enterprise_edition_attribute_version"
+        model="product.template.attribute.line"
+    >
+        <field
+            name="product_tmpl_id"
+            ref="product_odoo_enterprise_edition_product_template"
+        />
+        <field name="attribute_id" ref="product_attribute_version" />
+        <field
+            name="value_ids"
+            eval="[(4,ref('product_attribute_version_17_0'), ref('product_attribute_version_18_0'), ref('product_attribute_version_19_0'))]"
+        />
     </record>
 
     <record id="chart_odoo_value_ingress_host" model="helm.chart.value">
@@ -130,32 +144,5 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
             name="filter_product_ids"
             eval="[(4, ref('product_odoo_enterprise_edition'))]"
         />
-    </record>
-    <record id="chart_odoo_value_ingress_classname" model="helm.chart.value">
-        <field name="chart_id" ref="helm.chart_odoo" />
-        <field
-            name="filter_cluster_ids"
-            eval="[(4, ref('kubectl.kubectl_cluster_axo'))]"
-        />
-        <field name="path">ingress.className</field>
-        <field name="value">'haproxy'</field>
-    </record>
-    <record id="chart_odoo_value_vshnpostgres_enabled" model="helm.chart.value">
-        <field name="chart_id" ref="helm.chart_odoo" />
-        <field
-            name="filter_cluster_ids"
-            eval="[(4, ref('kubectl.kubectl_cluster_axo'))]"
-        />
-        <field name="path">vshnPostgres.enabled</field>
-        <field name="value">True</field>
-    </record>
-    <record id="chart_odoo_value_cnpg_enabled" model="helm.chart.value">
-        <field name="chart_id" ref="helm.chart_odoo" />
-        <field
-            name="filter_cluster_ids"
-            eval="[(4, ref('kubectl.kubectl_cluster_axo'))]"
-        />
-        <field name="path">cnpg.enabled</field>
-        <field name="value">False</field>
     </record>
 </odoo>
