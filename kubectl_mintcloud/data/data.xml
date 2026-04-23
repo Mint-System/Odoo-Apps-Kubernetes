@@ -15,14 +15,14 @@
         <field name="server">https://api.exoscale-ch-gva-2-0.appuio.cloud:6443</field>
         <field name="alias">axo</field>
         <field name="domain">axo.mintcloud.ch</field>
-        <field name="partner_id" ref="kubectl.res_partner_vshn" />
+        <field name="partner_id" ref="res_partner_vshn" />
     </record>
     <record id="kubectl_context_axo" model="kubectl.context">
         <field name="name">Admin</field>
         <field name="cluster_id" ref="kubectl_cluster_axo" />
     </record>
     <record id="kubectl_cluster_axo" model="kubectl.cluster">
-        <field name="context_id" ref="kubectl.kubectl_context_axo" />
+        <field name="context_id" ref="kubectl_context_axo" />
     </record>
 
     <record id="res_partner_exoscale" model="res.partner">
@@ -41,13 +41,13 @@
         >https://772b06e8-a033-43bc-86c5-59bce1bc7195.sks-ch-dk-2.exo.io:443</field>
         <field name="alias">exo</field>
         <field name="domain">exo.mintcloud.ch</field>
-        <field name="partner_id" ref="kubectl.res_partner_exoscale" />
+        <field name="partner_id" ref="res_partner_exoscale" />
     </record>
     <record id="kubectl_context_exo" model="kubectl.context">
         <field name="name">Admin</field>
         <field name="cluster_id" ref="kubectl_cluster_exo" />
     </record>
     <record id="kubectl_cluster_exo" model="kubectl.cluster">
-        <field name="context_id" ref="kubectl.kubectl_context_exo" />
+        <field name="context_id" ref="kubectl_context_exo" />
     </record>
 </odoo>

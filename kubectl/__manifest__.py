@@ -10,7 +10,6 @@
     "license": "AGPL-3",
     "depends": ["base"],
     "data": [
-        "data/data.xml",
         "security/security.xml",
         "security/ir.model.access.csv",
         "views/res_users_views.xml",
@@ -25,6 +24,5 @@
     "images": ["images/screen.png"],
     "external_dependencies": {"bin": ["kubectl"]},
     "demo": ["demo/demo.xml"],
-    "test": ["tests/test_kubectl_context.py"],
     "assets": {"web.assets_backend": ["kubectl/static/src/css/style.css"]},
 }

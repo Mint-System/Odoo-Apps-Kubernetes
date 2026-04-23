@@ -20,6 +20,7 @@ git clone git@github.com:Mint-System/Odoo-Apps-Kubernetes.git ./addons/kubernete
 | [kubectl_contacts](kubectl_contacts) |         Contacts filter for provider and consulting partners. |
 | [kubectl_import](kubectl_import) |         Import data from Kubernetes cluster. |
 | [kubectl](kubectl) |         Manage kubectl configuration. |
+| [kubectl_mintcloud](kubectl_mintcloud) |         Mint Cloud cluster data. |
 | [sale_helm](sale_helm) |         Sell services and assign hosting provider and consulting partner. |
 | [website_kubectl](website_kubectl) |         Present Kuberentes clusters on website. |
 | [website_sale_helm](website_sale_helm) |         Apply Helm Charts when a product is bought. |
