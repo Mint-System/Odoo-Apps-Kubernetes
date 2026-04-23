@@ -12,19 +12,4 @@
         <field name="parent_id" ref="website.main_menu" />
         <field name="sequence" type="int">55</field>
     </record>
-
-    <record id="kubectl.kubectl_cluster_axo" model="kubectl.cluster">
-        <!-- <field name="website_published" eval="True" /> -->
-        <field
-            name="website_short_description"
-        >Managed Kubernetes platform by VSHN</field>
-        <field name="website_description" type="html">
-            <div class="text-muted">
-                <p
-                >APPUiO is a managed Kubernetes platform provided by VSHN, offering enterprise-grade container orchestration.</p>
-                <p
-                >This production-ready cluster includes advanced features like automated scaling, monitoring, and security.</p>
-            </div>
-        </field>
-    </record>
 </odoo>
