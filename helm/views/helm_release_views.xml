@@ -18,6 +18,12 @@
                         invisible="state == 'installed'"
                     />
                     <button
+                        name="action_status"
+                        string="Status"
+                        type="object"
+                        invisible="state == 'draft'"
+                    />
+                    <button
                         name="action_uninstall"
                         string="Uninstall"
                         type="object"
@@ -114,7 +120,7 @@
                                 <field
                                     name="secret_ids"
                                     nolabel="1"
-                                    context="{'default_chart_id': id}"
+                                    context="{'default_release_id': id}"
                                 >
                                     <list
                                         context="{'default_secret_id': id}"

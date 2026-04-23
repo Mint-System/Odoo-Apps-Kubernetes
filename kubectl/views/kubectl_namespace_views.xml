@@ -12,6 +12,7 @@
                         </h1>
                     </div>
                     <group>
+                        <field name="uid" />
                         <field name="cluster_id" readonly="True" />
                     </group>
                     <notebook />

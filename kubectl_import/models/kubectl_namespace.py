@@ -1,7 +1,7 @@
 import json
 import logging
 
-from odoo import api, fields, models
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -9,25 +9,15 @@ _logger = logging.getLogger(__name__)
 class KubectlNamespace(models.Model):
     _inherit = "kubectl.namespace"
 
-    uid = fields.Char(readonly=True)
-
-    def _get_uid(self):
-        """
-        Get uid of the record
-        """
-        for rec in self.filtered(lambda r: not r.uid):
-            command = f"kubectl get {self._resource} {rec.name} -o jsonpath='{{.metadata.uid}}'"
-            response = rec
-            rec.uid = response
-
     @api.model
     def _import_namespaces(self, context_id):
         """
+        Kubernetes API wrapper.
         Load all namespaces from the current context.
         Creat missing namespace entries.
         """
         cluster_id = context_id.cluster_id
-        command = f"kubectl get {self._resource} -o json".split(" ")
+        command = f"kubectl get {self._kubernetes_resource} -o json".split(" ")
         result = context_id.run(command)
         data = json.loads(result.stdout)
         for item in data["items"]:

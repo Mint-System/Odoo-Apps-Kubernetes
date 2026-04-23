@@ -19,6 +19,7 @@
     </record>
     <record id="kubectl_namespace_default_demo" model="kubectl.namespace">
         <field name="name">default</field>
+        <field name="uid">7e9322b6-d000-4def-81c0-95c5f06fcf52</field>
         <field name="cluster_id" ref="kubectl_cluster_kind_demo" />
     </record>
     <record id="kubectl_context_kind_demo" model="kubectl.context">

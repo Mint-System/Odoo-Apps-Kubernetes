@@ -1,3 +1,4 @@
+from . import kuberentes_resource_mixin
 from . import res_users
 from . import kubectl_context
 from . import kubectl_cluster

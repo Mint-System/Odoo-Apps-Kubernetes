@@ -204,6 +204,7 @@ class HelmRelease(models.Model):
 
     def action_install(self):
         """
+        Kubernetes API wrapper.
         Install the Helm chart using the default context configuration.
         """
         self.ensure_one()
@@ -214,26 +215,12 @@ class HelmRelease(models.Model):
 
         # Create namespace in Kubernetes first
         if self.create_namespace:
-            try:
-                command = [
-                    "kubectl",
-                    "create",
-                    "namespace",
-                    self.namespace,
-                ]
-                result = self.cluster_id.context_id.run(command)
-                if not self.namespace_id:
-                    self.namespace_id = self.env["kubectl.namespace"].create(
-                        {"name": self.namespace, "cluster_id": self.cluster_id.id}
-                    )
-                    self.create_namespace = False
-                _logger.info(f"Created namespace {self.namespace}")
-            except subprocess.CalledProcessError as e:
-                _logger.error(f"Failed to create namespace {self.namespace}: {e.stderr}")
+            self.namespace_id = self.env["kubectl.namespace"].create(
+                {"name": self.namespace, "cluster_id": self.cluster_id.id}
+            )
 
         # Create secrets before chart installation
-        # FIXME: Check if secrets already exist
-        # self._create_secrets()
+        self.secret_ids._create_secret(self)
 
         try:
             # Setup install command
@@ -256,74 +243,9 @@ class HelmRelease(models.Model):
             self.output = e.stderr
             return display_notification("Installing Chart Failed", e.stderr, "danger")
 
-    def _create_secrets(self):
-        """
-        Create Kubernetes secrets for this release.
-        """
-        self.ensure_one()
-
-        if not self.secret_ids or not self.namespace:
-            return
-
-        for secret in self.secret_ids:
-            secret_data = ""
-            for data in secret.data_ids:
-                try:
-                    evaluated_value = self._eval_value(data.value)
-                    secret_data += f"{data.key}={evaluated_value}\n"
-                except Exception as e:
-                    _logger.error(f"Error evaluating secret value {data.value}: {str(e)}")
-                    continue
-
-            if not secret_data:
-                continue
-
-            # Create secret using kubectl
-            try:
-                # Create secret from literal values
-                command = [
-                    "kubectl",
-                    "create",
-                    "secret",
-                    "generic",
-                    secret.name,
-                    "--namespace",
-                    self.namespace,
-                    "--from-literal=" + secret_data.strip().replace("\n", " --from-literal="),
-                ]
-                result = self.cluster_id.context_id.run(command)
-                _logger.info(f"Created secret {secret.name} in namespace {self.namespace}")
-            except subprocess.CalledProcessError as e:
-                _logger.error(f"Failed to create secret {secret.name}: {e.stderr}")
-
-    def _delete_secrets(self):
-        """
-        Delete Kubernetes secrets for this release.
-        """
-        self.ensure_one()
-
-        if not self.secret_ids or not self.namespace:
-            return
-
-        for secret in self.secret_ids:
-            try:
-                # Delete secret using kubectl
-                command = [
-                    "kubectl",
-                    "delete",
-                    "secret",
-                    secret.name,
-                    "--namespace",
-                    self.namespace,
-                    "--ignore-not-found=true",  # Don't fail if secret doesn't exist
-                ]
-                result = self.cluster_id.context_id.run(command)
-                _logger.info(f"Deleted secret {secret.name} from namespace {self.namespace}")
-            except subprocess.CalledProcessError as e:
-                _logger.error(f"Failed to delete secret {secret.name}: {e.stderr}")
-
     def action_upgrade(self):
         """
+        Kubernetes API wrapper.
         Upgrade the Helm chart using the default context configuration.
         """
         self.ensure_one()
@@ -337,19 +259,20 @@ class HelmRelease(models.Model):
             result = self.cluster_id.context_id.run(command, self.values)
 
             self.output = result.stdout
-            return display_notification("Chart Upgraded", result.stdout, "success")
+            return display_notification("Release Upgraded", result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
-            return display_notification("Upgrading Chart Failed", e.stderr, "danger")
+            return display_notification("Upgrading Release Failed", e.stderr, "danger")
 
     def action_uninstall(self):
         """
+        Kubernetes API wrapper.
         Uninstall the Helm chart using the default context configuration.
         """
         self.ensure_one()
         try:
             # Delete secrets before uninstalling chart
-            self._delete_secrets()
+            self.secret_ids._delete_secret(self)
 
             command = [
                 "helm",
@@ -359,7 +282,25 @@ class HelmRelease(models.Model):
             result = self.cluster_id.context_id.run(command)
             self.write({"state": "draft"})
             self.output = result.stdout
-            return display_notification("Chart Uninstalled", result.stdout, "success")
+            return display_notification("Release Uninstalled", result.stdout, "success")
         except subprocess.CalledProcessError as e:
             self.output = e.stderr
-            return display_notification("Uninstalling Chart Failed", e.stderr, "danger")
+            return display_notification("Uninstalling Release Failed", e.stderr, "danger")
+
+    def action_status(self):
+        """
+        Kubernetes API wrapper.
+        Show status of helm release.
+        """
+        self.ensure_one()
+        try:
+            command = [
+                "helm",
+                "status",
+                self.name,
+            ]
+            result = self.cluster_id.context_id.run(command)
+            self.output = result.stdout
+        except subprocess.CalledProcessError as e:
+            self.output = e.stderr
+            return display_notification("Status Release Failed", e.stderr, "danger")

@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 class KubectlContext(models.Model):
     _name = "kubectl.context"
     _description = "Kubectl Context"
-    _resource = "context"
 
     name = fields.Char(required=True)
     config = fields.Text(help="Export and parse config with `kubectl config view --minify --raw`.")
@@ -24,7 +23,7 @@ class KubectlContext(models.Model):
 
     def action_run(self):
         """
-        Run a command.
+        Run a kubctl or helm command.
         """
         self.ensure_one()
         if not self.command or not (self.command.startswith("kubectl ") or self.command.startswith("helm ")):
@@ -67,6 +66,7 @@ class KubectlContext(models.Model):
 
     def run(self, command, values=None):
         """
+        Kubernetes API wrapper.
         Run kubectl or helm command.
         """
         self.ensure_one()
