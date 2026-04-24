@@ -54,6 +54,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="attribute_id" ref="product_attribute_version" />
         <field name="sequence">1</field>
     </record>
+
     <record id="product_odoo_community_edition" model="product.product">
         <field name="name">Odoo Community Edition</field>
         <field name="type">service</field>
@@ -71,9 +72,56 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="attribute_id" ref="product_attribute_version" />
         <field
             name="value_ids"
-            eval="[(4,ref('product_attribute_version_17_0'), ref('product_attribute_version_18_0'), ref('product_attribute_version_19_0'))]"
+            eval="[(6, 0, [
+            ref('helm.product_attribute_version_17_0'),
+            ref('helm.product_attribute_version_18_0'),
+            ref('helm.product_attribute_version_19_0'),
+        ])]"
         />
     </record>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'helm.product_odoo_community_edition_version_19_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_attribute_version').product_template_value_ids[0],
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_community_edition_version_18_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_attribute_version').product_template_value_ids[1],
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_community_edition_version_17_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_attribute_version').product_template_value_ids[2],
+            'noupdate': True,
+        }]"
+        />
+    </function>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'helm.product_odoo_community_edition_19_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_community_edition_version_19_0')
+            ),
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_community_edition_18_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_community_edition_version_18_0')
+            ),
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_community_edition_17_0',
+            'record': obj().env.ref('helm.product_odoo_community_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_community_edition_version_17_0')
+            ),
+            'noupdate': True,
+        }]"
+        />
+    </function>
+
     <record id="product_odoo_enterprise_edition" model="product.product">
         <field name="name">Odoo Enterprise Edition</field>
         <field name="type">service</field>
@@ -91,9 +139,55 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="attribute_id" ref="product_attribute_version" />
         <field
             name="value_ids"
-            eval="[(4,ref('product_attribute_version_17_0'), ref('product_attribute_version_18_0'), ref('product_attribute_version_19_0'))]"
+            eval="[(6, 0, [
+            ref('helm.product_attribute_version_17_0'),
+            ref('helm.product_attribute_version_18_0'),
+            ref('helm.product_attribute_version_19_0'),
+        ])]"
         />
     </record>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'helm.product_odoo_enterprise_edition_version_19_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_attribute_version').product_template_value_ids[0],
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_enterprise_edition_version_18_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_attribute_version').product_template_value_ids[1],
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_enterprise_edition_version_17_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_attribute_version').product_template_value_ids[2],
+            'noupdate': True,
+        }]"
+        />
+    </function>
+    <function model="ir.model.data" name="_update_xmlids">
+        <value
+            model="base"
+            eval="[{
+            'xml_id': 'helm.product_odoo_enterprise_edition_19_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_enterprise_edition_version_19_0')
+            ),
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_enterprise_edition_18_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_enterprise_edition_version_18_0')
+            ),
+            'noupdate': True,
+        }, {
+            'xml_id': 'helm.product_odoo_enterprise_edition_17_0',
+            'record': obj().env.ref('helm.product_odoo_enterprise_edition_product_template')._get_variant_for_combination(
+                obj().env.ref('helm.product_odoo_enterprise_edition_version_17_0')
+            ),
+            'noupdate': True,
+        }]"
+        />
+    </function>
 
     <record id="chart_odoo_value_ingress_host" model="helm.chart.value">
         <field name="chart_id" ref="helm.chart_odoo" />
@@ -121,28 +215,78 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="release_chart_id" eval="chart_odoo" />
         <field name="readonly" eval="True" />
     </record>
-    <record id="chart_odoo_value_image" model="helm.chart.value">
+
+    <record id="chart_odoo_value_image_19_0" model="helm.chart.value">
         <field name="path">image</field>
         <field name="release_chart_id" eval="chart_odoo" />
+        <field
+            name="filter_product_ids"
+            eval="[
+            (4, ref('helm.product_odoo_community_edition_19_0')),
+            (4, ref('helm.product_odoo_enterprise_edition_19_0')),
+        ]"
+        />
     </record>
-    <record id="chart_odoo_value_image_option1" model="helm.chart.value.option">
+    <record id="chart_odoo_value_image_19_0_option1" model="helm.chart.value.option">
+        <field name="value">mintsystem/odoo:19.0.20260305</field>
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_19_0'))]" />
+    </record>
+    <record id="chart_odoo_value_image_19_0_option2" model="helm.chart.value.option">
+        <field name="value">mintsystem/odoo:19.0.20260409</field>
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_19_0'))]" />
+    </record>
+
+    <record id="chart_odoo_value_image_18_0" model="helm.chart.value">
+        <field name="path">image</field>
+        <field name="release_chart_id" eval="chart_odoo" />
+        <field
+            name="filter_product_ids"
+            eval="[
+            (4, ref('helm.product_odoo_community_edition_18_0')),
+            (4, ref('helm.product_odoo_enterprise_edition_18_0')),
+        ]"
+        />
+    </record>
+    <record id="chart_odoo_value_image_18_0_option1" model="helm.chart.value.option">
         <field name="value">mintsystem/odoo:18.0.20260305</field>
-        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image'))]" />
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_18_0'))]" />
     </record>
-    <record id="chart_odoo_value_image_option2" model="helm.chart.value.option">
+    <record id="chart_odoo_value_image_18_0_option2" model="helm.chart.value.option">
         <field name="value">mintsystem/odoo:18.0.20260409</field>
-        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image'))]" />
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_18_0'))]" />
     </record>
-    <record id="chart_odoo_value_image" model="helm.chart.value">
-        <field name="option_id" ref="chart_odoo_value_image_option2" />
+
+    <record id="chart_odoo_value_image_17_0" model="helm.chart.value">
+        <field name="path">image</field>
+        <field name="release_chart_id" eval="chart_odoo" />
+        <field
+            name="filter_product_ids"
+            eval="[
+            (4, ref('helm.product_odoo_community_edition_17_0')),
+            (4, ref('helm.product_odoo_enterprise_edition_17_0')),
+        ]"
+        />
     </record>
+    <record id="chart_odoo_value_image_17_0_option1" model="helm.chart.value.option">
+        <field name="value">mintsystem/odoo:17.0.20260305</field>
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_17_0'))]" />
+    </record>
+    <record id="chart_odoo_value_image_17_0_option2" model="helm.chart.value.option">
+        <field name="value">mintsystem/odoo:17.0.20260409</field>
+        <field name="value_ids" eval="[(4, ref('chart_odoo_value_image_17_0'))]" />
+    </record>
+
     <record id="chart_odoo_value_download_enterprise" model="helm.chart.value">
         <field name="chart_id" ref="helm.chart_odoo" />
         <field name="path">downloadOdooEnterprise</field>
         <field name="value">True</field>
         <field
             name="filter_product_ids"
-            eval="[(4, ref('product_odoo_enterprise_edition'))]"
+            eval="[
+            (4, ref('helm.product_odoo_enterprise_edition_17_0')),
+            (4, ref('helm.product_odoo_enterprise_edition_18_0')),
+            (4, ref('helm.product_odoo_enterprise_edition_19_0')),
+        ]"
         />
     </record>
 </odoo>
