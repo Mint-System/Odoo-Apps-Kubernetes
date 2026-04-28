@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="res_partner_mint_system" model="res.partner">
-        <field name="name">Mint System GmbH</field>
-        <field name="email">login@mint-system.ch</field>
+    <record id="base.main_company" model="res.company">
+        <field name="name">Mint Cloud</field>
+        <field name="website">https://www.mint-cloud.ch</field>
     </record>
 </odoo>
