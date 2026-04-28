@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="res_partner_mint_system" model="res.partner">
+    <record id="base_mintcloud.res_partner_mint_system" model="res.partner">
         <field name="name">Mint System GmbH</field>
         <field name="email">login@mint-system.ch</field>
         <field

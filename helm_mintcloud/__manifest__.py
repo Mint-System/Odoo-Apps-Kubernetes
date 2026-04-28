@@ -1,5 +1,5 @@
 {
-    "name": "Helm mintcloud",
+    "name": "Helm Mint Cloud",
     "summary": """
         Mint Cloud helm data.
     """,
@@ -9,10 +9,7 @@
     "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "depends": ["helm", "kubectl_mintcloud"],
-    "data": [
-        "data/data.xml",
-        "data/helm_chart_odoo_data.xml"
-    ],
+    "data": ["data/data.xml", "data/helm_chart_odoo_data.xml"],
     "installable": True,
     "application": False,
     "auto_install": False,
