@@ -80,7 +80,7 @@
         <field name="cluster_id" ref="kubectl_cluster_chk" />
     </record>
     <record id="kubectl_context_chk_deploy" model="kubectl.context">
-        <field name="name">Deplohy</field>
+        <field name="name">Deploy</field>
         <field name="cluster_id" ref="kubectl_cluster_chk" />
     </record>
     <record id="kubectl_cluster_chk" model="kubectl.cluster">
