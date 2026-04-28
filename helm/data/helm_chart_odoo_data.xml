@@ -11,7 +11,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
 Your environments:
 </br>
 Production: https://<t t-out="release.get_value('ingress.host')" />
-<t t-if="release.get_value('ingress.customDomain') != 'False'">
+<t t-if="release.get_value('ingress.customDomain')">
 Custom Domain: https://<t t-out="release.get_value('ingress.customDomain')" />
 </t>
 <t t-if="release.get_value('staging.enabled')">
@@ -193,27 +193,32 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
         <field name="chart_id" ref="helm.chart_odoo" />
         <field name="path">ingress.host</field>
         <field name="value">release.namespace + '.' + release.cluster_id.domain</field>
+        <field name="help">The domain name of the Odoo instance.</field>
     </record>
     <record id="chart_odoo_value_staging_enable" model="helm.chart.value">
         <field name="path">staging.enabled</field>
         <field name="value">True</field>
         <field name="chart_id" eval="chart_odoo" />
+        <field name="help">Deploy an Odoo staging enviroment.</field>
     </record>
     <record id="chart_odoo_value_init_login" model="helm.chart.value">
         <field name="path">init.login</field>
         <field name="value">release.partner_id.email</field>
         <field name="chart_id" eval="chart_odoo" />
+        <field name="help">Username of the admin user.</field>
     </record>
     <record id="chart_odoo_value_init_lang" model="helm.chart.value">
         <field name="path">init.lang</field>
         <field name="value">release.partner_id.lang</field>
         <field name="chart_id" eval="chart_odoo" />
+        <field name="help">Language of the Odoo database.</field>
     </record>
     <record id="chart_odoo_value_init_password" model="helm.chart.value">
         <field name="path">init.password</field>
         <field name="value">generate_password()</field>
         <field name="release_chart_id" eval="chart_odoo" />
         <field name="readonly" eval="True" />
+        <field name="help">Generated password of the admin user.</field>
     </record>
 
     <record id="chart_odoo_value_image_19_0" model="helm.chart.value">
@@ -226,6 +231,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
             (4, ref('helm.product_odoo_enterprise_edition_19_0')),
         ]"
         />
+        <field name="help">Odoo version and revision.</field>
     </record>
     <record id="chart_odoo_value_image_19_0_option1" model="helm.chart.value.option">
         <field name="value">mintsystem/odoo:19.0.20260305</field>
@@ -246,6 +252,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
             (4, ref('helm.product_odoo_enterprise_edition_18_0')),
         ]"
         />
+        <field name="help">Odoo version and revision.</field>
     </record>
     <record id="chart_odoo_value_image_18_0_option1" model="helm.chart.value.option">
         <field name="value">mintsystem/odoo:18.0.20260305</field>
@@ -266,6 +273,7 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
             (4, ref('helm.product_odoo_enterprise_edition_17_0')),
         ]"
         />
+        <field name="help">Odoo version and revision.</field>
     </record>
     <record id="chart_odoo_value_image_17_0_option1" model="helm.chart.value.option">
         <field name="value">mintsystem/odoo:17.0.20260305</field>
@@ -288,5 +296,6 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-erste-schritte.htm
             (4, ref('helm.product_odoo_enterprise_edition_19_0')),
         ]"
         />
+        <field name="help">Download and install Odoo Enterprise modules.</field>
     </record>
 </odoo>

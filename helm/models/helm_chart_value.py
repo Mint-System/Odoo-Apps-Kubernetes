@@ -23,6 +23,7 @@ class HelmChartValue(models.Model):
         "helm.chart.value.option", domain="[('value_ids', 'in', id)]", help="Select value from options."
     )
     readonly = fields.Boolean(help="If checked, this value cannot be modified in the portal.")
+    help = fields.Text()
 
     def _compute_display_name(self):
         for rec in self:

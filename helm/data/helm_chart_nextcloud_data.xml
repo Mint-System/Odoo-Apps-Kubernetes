@@ -21,5 +21,6 @@ Getting started guide: https://wiki.mint-system.ch/mint-cloud-odoo-erste-schritt
         <field name="chart_id" ref="helm.chart_nextcloud" />
         <field name="path">nextcloud.host</field>
         <field name="value">release.namespace + '.' + release.cluster_id.domain</field>
+        <field name="help">The full domain name of the Nextcloud instance.</field>
     </record>
 </odoo>

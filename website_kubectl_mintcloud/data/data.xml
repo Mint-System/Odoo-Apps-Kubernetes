@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="kubectl_mintcloud.kubectl_cluster_axo" model="kubectl.cluster">
-        <field name="website_published" eval="True" />
+        <field name="website_published" eval="False" />
         <field
             name="website_short_description"
         >Managed Kubernetes platform by VSHN</field>
@@ -11,6 +11,34 @@
                 >APPUiO is a managed Kubernetes platform provided by VSHN, offering enterprise-grade container orchestration.</p>
                 <p
                 >This production-ready cluster includes advanced features like automated scaling, monitoring, and security.</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="kubectl_mintcloud.kubectl_cluster_exo" model="kubectl.cluster">
+        <field name="website_published" eval="False" />
+        <field
+            name="website_short_description"
+        >Kubernetes cluster managed by Mint System</field>
+        <field name="website_description" type="html">
+            <div class="text-muted">
+                <p
+                >Exoscale ist the best choice to build cloud infrastructure. With SKS they run Kubernetes clusters at scale.</p>
+                <p>This Kubernetes cluster is managed by Mint System.</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="kubectl_mintcloud.kubectl_cluster_chk" model="kubectl.cluster">
+        <field name="website_published" eval="False" />
+        <field
+            name="website_short_description"
+        >Kubernetes cluster managed by Mint System</field>
+        <field name="website_description" type="html">
+            <div class="text-muted">
+                <p
+                >Infomaniak is known for their groupware products. With their public cloud offering they provide an OpenStack project to setup Kuberentes clusters.</p>
+                <p>This Kubernetes cluster is managed by Mint System.</p>
             </div>
         </field>
     </record>

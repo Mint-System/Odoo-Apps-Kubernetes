@@ -1,9 +1,8 @@
 <odoo>
-    <record id="helm.product_odoo_community_edition" model="product.product">
+    <record id="helm.product_odoo_community_edition_product_template" model="product.template">
         <field name="website_published">True</field>
     </record>
-
-    <record id="helm.product_odoo_enterprise_edition" model="product.product">
+    <record id="helm.product_odoo_enterprise_edition_product_template" model="product.template">
         <field name="website_published">True</field>
     </record>
 </odoo>

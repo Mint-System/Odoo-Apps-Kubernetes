@@ -38,7 +38,6 @@ class HelmRelease(models.Model):
     )
     product_id = fields.Many2one("product.product", required=True)
     partner_id = fields.Many2one("res.partner", string="Customer", required=True)
-    sale_line_id = fields.Many2one("sale.order.line", string="Sale Order Line")
 
     value_ids = fields.One2many(
         "helm.chart.value",

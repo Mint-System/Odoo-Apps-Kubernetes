@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="odoo_chart_secret" model="helm.chart.secret">
+        <field name="name">odoo-creds</field>
+        <field name="chart_id" ref="helm.chart_odoo" />
+    </record>
+    <record id="odoo_chart_secret_data" model="helm.chart.secret.data">
+        <field name="key">GITHUB_USERNAME</field>
+        <field name="value">'bot-mintsys'</field>
+        <field name="secret_id" ref="odoo_chart_secret" />
+    </record>
+
+    <record id="chart_odoo_value_ingress_classname" model="helm.chart.value">
+        <field name="chart_id" ref="helm.chart_odoo" />
+        <field
+            name="filter_cluster_ids"
+            eval="[(4, ref('kubectl_mintcloud.kubectl_cluster_axo'))]"
+        />
+        <field name="path">ingress.className</field>
+        <field name="value">'haproxy'</field>
+        <field name="help">Set ingress class.</field>
+    </record>
+    <record id="chart_odoo_value_vshnpostgres_enabled" model="helm.chart.value">
+        <field name="chart_id" ref="helm.chart_odoo" />
+        <field
+            name="filter_cluster_ids"
+            eval="[(4, ref('kubectl_mintcloud.kubectl_cluster_axo'))]"
+        />
+        <field name="path">vshnPostgres.enabled</field>
+        <field name="value">True</field>
+        <field name="help">Use vshnPostgres database.</field>
+    </record>
+    <record id="chart_odoo_value_cnpg_enabled" model="helm.chart.value">
+        <field name="chart_id" ref="helm.chart_odoo" />
+        <field
+            name="filter_cluster_ids"
+            eval="[(4, ref('kubectl_mintcloud.kubectl_cluster_axo'))]"
+        />
+        <field name="path">cnpg.enabled</field>
+        <field name="value">False</field>
+        <field name="help">Use CloudNativePG database.</field>
+    </record>
+</odoo>

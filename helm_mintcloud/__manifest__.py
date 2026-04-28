@@ -11,6 +11,7 @@
     "depends": ["helm", "kubectl_mintcloud"],
     "data": [
         "data/data.xml",
+        "data/helm_chart_odoo_data.xml"
     ],
     "installable": True,
     "application": False,

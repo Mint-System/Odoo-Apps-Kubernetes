@@ -11,18 +11,22 @@
         <field name="country_id" ref="base.ch" />
     </record>
     <record id="kubectl_cluster_axo" model="kubectl.cluster">
-        <field name="name">APPUiO</field>
+        <field name="name">APPUiO / VSHN</field>
         <field name="server">https://api.exoscale-ch-gva-2-0.appuio.cloud:6443</field>
         <field name="alias">axo</field>
         <field name="domain">axo.mintcloud.ch</field>
         <field name="partner_id" ref="res_partner_vshn" />
     </record>
-    <record id="kubectl_context_axo" model="kubectl.context">
+    <record id="kubectl_context_axo_admin" model="kubectl.context">
         <field name="name">Admin</field>
         <field name="cluster_id" ref="kubectl_cluster_axo" />
     </record>
+    <record id="kubectl_context_axo_deploy" model="kubectl.context">
+        <field name="name">Deploy</field>
+        <field name="cluster_id" ref="kubectl_cluster_axo" />
+    </record>
     <record id="kubectl_cluster_axo" model="kubectl.cluster">
-        <field name="context_id" ref="kubectl_context_axo" />
+        <field name="context_id" ref="kubectl_context_axo_admin" />
     </record>
 
     <record id="res_partner_exoscale" model="res.partner">
@@ -35,7 +39,7 @@
         <field name="country_id" ref="base.ch" />
     </record>
     <record id="kubectl_cluster_exo" model="kubectl.cluster">
-        <field name="name">SKS</field>
+        <field name="name">Exoscale / Mint System</field>
         <field
             name="server"
         >https://772b06e8-a033-43bc-86c5-59bce1bc7195.sks-ch-dk-2.exo.io:443</field>
@@ -43,11 +47,43 @@
         <field name="domain">exo.mintcloud.ch</field>
         <field name="partner_id" ref="res_partner_exoscale" />
     </record>
-    <record id="kubectl_context_exo" model="kubectl.context">
+    <record id="kubectl_context_exo_admin" model="kubectl.context">
         <field name="name">Admin</field>
         <field name="cluster_id" ref="kubectl_cluster_exo" />
     </record>
+    <record id="kubectl_context_exo_deploy" model="kubectl.context">
+        <field name="name">Deploy</field>
+        <field name="cluster_id" ref="kubectl_cluster_exo" />
+    </record>
     <record id="kubectl_cluster_exo" model="kubectl.cluster">
-        <field name="context_id" ref="kubectl_context_exo" />
+        <field name="context_id" ref="kubectl_context_exo_admin" />
+    </record>
+
+    <record id="res_partner_infomaniak" model="res.partner">
+        <field name="name">Infomaniak</field>
+        <field name="website">https://</field>
+        <field name="phone" />
+        <field name="street" />
+        <field name="city" />
+        <field name="zip" />
+        <field name="country_id" ref="base.ch" />
+    </record>
+    <record id="kubectl_cluster_chk" model="kubectl.cluster">
+        <field name="name">Infomaniak / Mint System</field>
+        <field name="server">https://83.166.143.133:30176</field>
+        <field name="alias">chk</field>
+        <field name="domain">chk.mintcloud.ch</field>
+        <field name="partner_id" ref="res_partner_infomaniak" />
+    </record>
+    <record id="kubectl_context_chk_admin" model="kubectl.context">
+        <field name="name">Admin</field>
+        <field name="cluster_id" ref="kubectl_cluster_chk" />
+    </record>
+    <record id="kubectl_context_chk_deploy" model="kubectl.context">
+        <field name="name">Deplohy</field>
+        <field name="cluster_id" ref="kubectl_cluster_chk" />
+    </record>
+    <record id="kubectl_cluster_chk" model="kubectl.cluster">
+        <field name="context_id" ref="kubectl_context_chk_admin" />
     </record>
 </odoo>

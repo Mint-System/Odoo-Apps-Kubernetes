@@ -21,21 +21,40 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="filter_cluster_ids" widget="many2many_tags" />
-                            <field name="filter_product_ids" widget="many2many_tags" />
+                    <div class="oe_title">
+                        <h1>
                             <field name="path" />
-                            <field name="value" />
-                            <field name="option_id" />
-                            <field name="readonly" />
-                        </group>
-                        <group>
-                            <field name="chart_id" readonly="True" />
-                            <field name="release_chart_id" readonly="True" />
-                            <field name="release_id" readonly="True" />
-                        </group>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="help" />
                     </group>
+                    <notebook>
+                        <page string="General Information" name="general_info">
+                            <group>
+                                <group>
+                                    <field
+                                        name="filter_cluster_ids"
+                                        widget="many2many_tags"
+                                    />
+                                    <field
+                                        name="filter_product_ids"
+                                        widget="many2many_tags"
+                                    />
+                                </group>
+                                <group>
+                                    <field name="value" />
+                                    <field name="option_id" />
+                                    <field name="readonly" />
+                                </group>
+                                <group>
+                                    <field name="chart_id" readonly="True" />
+                                    <field name="release_chart_id" readonly="True" />
+                                    <field name="release_id" readonly="True" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
