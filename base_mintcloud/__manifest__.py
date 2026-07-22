@@ -1,6 +1,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
-    "name": "Base Mintcloud",
+    "name": "Base Mint Cloud",
     "summary": """
         Mint Cloud product data.
     """,

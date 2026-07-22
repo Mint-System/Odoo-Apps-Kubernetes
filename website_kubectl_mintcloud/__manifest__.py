@@ -1,5 +1,5 @@
 {
-    "name": "Website Kubectl mintcloud",
+    "name": "Website Kubectl Mint Cloud",
     "summary": """
         Mint Cloud website data.
     """,
