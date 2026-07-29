@@ -1,5 +1,6 @@
 ---
 title: Init Helm Portal module
+state: completed
 ---
 
 # Run 11
