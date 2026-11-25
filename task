@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
+# Usage: https://taskfile.build/usage/
 set -e
+
+if [[ -f ".env" ]]; then
+    # shellcheck source=/dev/null
+    source ".env"
+fi
 
 help-table() {
     local -a rows
@@ -7,13 +13,11 @@ help-table() {
 
     rows+=("Command|Option|Description")
     rows+=("all||Run all tasks.")
-    rows+=("build||Build python packages with whool.")
-    rows+=("docs||Update index.html.")
     rows+=("install||Setup the local environment.")
     rows+=("lint||Run pre-commit.")
+    rows+=("build||Build python packages with whool.")
     rows+=("publish||Publish python packages to PyPi.")
-    rows+=("test||Start Odoo and run module tests.")
-    rows+=("version||Show version of required tools.")
+    rows+=("docs||Update index.html.")
 
     for row in "${rows[@]}"; do
         IFS='|' read -r cmd opt desc <<< "$row"
@@ -65,13 +69,6 @@ if [[ -d "$HOME/taskfile.build/bin" ]]; then
     done
 fi
 
-version() {
-    uv --version
-    python3 -V
-    docker -v
-    helm version
-}
-
 install() {
     echo 'Setup .venv and install python dependencies'
     uv venv --clear
@@ -84,35 +81,6 @@ lint() {
 
     echo 'Run pre-commit'
     pre-commit run --all-files --show-diff-on-failure --color=always
-}
-
-test() {
-    echo 'Building Odoo image with kubectl and helm...'
-    docker build -t odoo-test-with-k8s-tools .
-
-    echo 'Start Postgres container'
-    docker rm -f postgres_test
-    docker run --name postgres_test -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=odoo -d postgres:14-alpine
-
-    echo 'Start Odoo container'
-    docker rm -f odoo_test
-    docker run -d --name odoo_test --link postgres_test:postgres \
-        -w /mnt/test-addons \
-        -v "${PWD}:/mnt/test-addons" \
-        -e TEST_ADDONS_DIR=/mnt/test-addons \
-        -e PGHOST=postgres \
-        -e PGUSER=odoo \
-        -e PGPASSWORD=odoo \
-        -e DB_NAME=odoo \
-        odoo-test-with-k8s-tools
-
-    sleep 3 # Wait for entrypoint script
-
-    echo 'Prepare test database'
-    docker exec odoo_test setup-tests
-
-    echo 'Run module tests'
-    docker exec odoo_test run-tests
 }
 
 build() {
@@ -206,19 +174,37 @@ docs() {
     done
 }
 
-if declare -f "$1" > /dev/null; then
-    "$1" "${@:2}"
+all() {
+    install
+    docs
+    lint
+    build
+}
+
+if [[ "$1" == *","* ]]; then
+    # Split comma-separated commands
+    IFS=',' read -ra COMMANDS <<< "$1"
+    for cmd in "${COMMANDS[@]}"; do
+        # Trim whitespace
+        cmd=$(echo "$cmd" | xargs)
+        if declare -f "$cmd" > /dev/null; then
+            "$cmd"
+        else
+            echo "Unknown command: $cmd"
+            help "$@"
+            exit 1
+        fi
+    done
+elif declare -f "$1" > /dev/null; then
+    if [[ "${2:-}" == "tfhelp" ]]; then
+        help "$1"
+    else
+        "$1" "${@:2}"
+    fi
 else
     case "$1" in
-        all)
-            install
-            lint
-            docs
-            build
-            ;;
         *)
             echo "Unknown command: $1"
-            help task
             exit 1
             ;;
     esac

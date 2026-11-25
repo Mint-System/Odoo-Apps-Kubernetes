@@ -14,8 +14,6 @@ jobs:
         uses: astral-sh/setup-uv@v6
       - name: Install
         run: ./task install
-      - name: Version
-        run: ./task version
       - name: Build
         run: ./task build
       - name: Publish
